@@ -60,6 +60,7 @@
 \renewcommand{\arraystretch}{1.18}
 \setcounter{secnumdepth}{2}
 \setcounter{tocdepth}{1}
+\makeatletter\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{3.0em}}\makeatother
 \setlist{itemsep=1.5pt,topsep=3pt,parsep=1pt,partopsep=0pt,leftmargin=*}
 \captionsetup{font=small,labelfont=bf}
 
@@ -640,9 +641,28 @@ were compiled and run while building this book.
 \toprule
 \textbf{Budget} & \textbf{Study hours} & \textbf{What to do}\\
 \midrule\endhead
-\textbf{P1: panic} & 6 h & Only three-star sections. C/C++ output traps (Ch.\,\ref{ch:c}, \ref{ch:cpp}), compiler theory essentials (Ch.\,\ref{ch:front}--\ref{ch:opt}: phases, FIRST/FOLLOW, LR basics, optimisations, data-flow), two timed coding problems (Ch.\,\ref{ch:dsa}), aptitude formula sheet (Ch.\,\ref{ch:apt}), one 45-minute mini-mock.\\
+\textbf{P1: panic} & 6 h & Only three-star sections. C/C++ output traps (Ch.\,\ref{ch:c}, \ref{ch:cpp}), compiler theory essentials (Ch.\,\ref{ch:front}--\ref{ch:opt}: phases, FIRST/FOLLOW, LR basics, optimisations, data-flow), two timed coding problems (Ch.\,\ref{ch:dsa}), aptitude formula sheet (Ch.\,\ref{ch:apt}), one 40-minute mini-mock; the exact blocks are in Section~\ref{sec:fast}.\\
 \textbf{P2: normal} & 12 h & P1 \emph{plus}: Python gotchas (Ch.\,\ref{ch:python}), OS/COA essentials (Ch.\,\ref{ch:cs}), ML quick pass (Ch.\,\ref{ch:ml}), LLVM/PTX/CUDA vocabulary (Ch.\,\ref{ch:llvm}--\ref{ch:cuda}), verification vocabulary (Ch.\,\ref{ch:verif}), full mock OA.\\
 \textbf{P3: full} & $\sim$14 h & Everything below, including the automation lab (Ch.\,\ref{ch:lab}), interview flashcards (Ch.\,\ref{ch:flash}) and a second set of timed coding problems.\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+\section{The six-hour fast path (P1) \prio{3}}\label{sec:fast}
+With only a working day, read \emph{only} the sections whose title carries three stars, the boxed ``must know'' lists, and attempt the drills; skip the two- and one-star sections and the source listings. The order puts first what candidates reported most often (Chapter~\ref{ch:intel}). Total: 360 minutes.
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{2.5cm}L{1.3cm}L{5.4cm}Y@{}}
+\toprule
+\textbf{Block} & \textbf{Time} & \textbf{Read (three-star sections only)} & \textbf{Done when}\\
+\midrule\endhead
+C and C++ output & 80 min & Ch.\,\ref{ch:c}: memory and storage classes, types and promotions, pointers, UB, preprocessor, bit manipulation, dynamic memory, call-by-value, re-implementing the library, the bug hunt, output drills. Ch.\,\ref{ch:cpp}: object lifetime, polymorphism, rule of 0/3/5, RAII, operators, templates, STL, UB and ODR, output drills & $\ge80\%$ on the drills and every miss has a one-line rule\\
+Compiler essentials & 80 min & Ch.\,\ref{ch:front}: what a compiler is, the toolchain, lexing, automata. Ch.\,\ref{ch:parsing}: grammars, LL(1), LR. Ch.\,\ref{ch:sem}: IR, SSA, runtime. Ch.\,\ref{ch:opt}: what an optimiser may do, local optimisation, data-flow, loops, code generation & you can compute FIRST/FOLLOW and a small LR(0) automaton, run reaching definitions, explain unrolling and inlining, and colour a small graph\\
+Coding & 70 min & Ch.\,\ref{ch:dsa}: constraints decide the algorithm, patterns, templates, stress testing; then two of the solved reported problems, timed at 25 minutes each & both pass their own tests against a brute force\\
+LLVM, PTX, CUDA vocabulary & 25 min & Ch.\,\ref{ch:llvm}: tools, IR, poison, passes. Ch.\,\ref{ch:ptx}: the pipeline, PTX. Ch.\,\ref{ch:cuda}: mental model, warps, memory & you can name NVVM $\to$ PTX $\to$ SASS and explain a warp and coalescing\\
+Verification & 20 min & Ch.\,\ref{ch:verif}: what verifying means, the oracle problem, differential testing, generators, test-case reduction & one minute each on differential testing and delta debugging\\
+Aptitude & 30 min & Ch.\,\ref{ch:apt}: the rules, the traps, the formula sheet, the shortcuts; then 15 mock questions & at least 11 of 15\\
+Mini-mock & 40 min & Ch.\,\ref{ch:qbank}: aptitude A1--A10, MCQs T1--T12 and coding problem C1, strictly timed & score logged and each error classified\\
+Top-40 card & 15 min & App.\,\ref{app:top40} & re-read once, then stop\\
 \bottomrule
 \end{xltabular}
 \end{center}
@@ -4661,7 +4681,7 @@ The chapter ends with a \textbf{working mini compiler} (Appendix~\ref{app:tiny})
 An \textbf{SDD} attaches \emph{attributes} to grammar symbols and \emph{semantic rules} to productions. \textbf{Synthesised} attributes are computed from children (bottom-up); \textbf{inherited} attributes from parent and siblings (top-down). \textbf{S-attributed}: synthesised only (evaluable during an LR parse by reduce-time actions). \textbf{L-attributed}: inherited attributes may depend only on the parent and \emph{left} siblings (evaluable in one left-to-right depth-first pass, so suitable for LL parsers and recursive descent). A \textbf{translation scheme (SDT)} embeds the actions in the productions at the exact point they run.
 \end{mustbox}
 \begin{center}\small
-\begin{xltabular}{\textwidth}{@{}L{3.6cm}L{4.4cm}Y@{}}
+\begin{xltabular}{\textwidth}{@{}L{3.0cm}L{5.8cm}Y@{}}
 \toprule
 \textbf{Production} & \textbf{Semantic rule} & \textbf{Kind}\\
 \midrule\endhead
@@ -5494,10 +5514,10 @@ Every IR and assembly listing in this chapter was generated by the real tools in
 
 \section{Architecture and the tools \prio{3}}
 \begin{center}
-\begin{tikzpicture}[node distance=6mm,every node/.style={font=\scriptsize},
- box/.style={draw=nvdark,fill=nvgreen!12,rounded corners=2pt,minimum height=8mm,align=center,text width=2.5cm},
+\begin{tikzpicture}[node distance=4.5mm,every node/.style={font=\scriptsize},
+ box/.style={draw=nvdark,fill=nvgreen!12,rounded corners=2pt,minimum height=8mm,align=center,text width=2.3cm},
  arr/.style={-{Stealth[length=2mm]},thick,nvdark}]
-\node[box] (fe) {\textbf{Front end}\\ Clang (C/C++/CUDA/OpenCL), Rust, Swift, Flang};
+\node[box] (fe) {\textbf{Front end}\\ Clang (C, C++, CUDA, OpenCL), Rust, Swift, Flang};
 \node[box,right=of fe] (ir) {\textbf{LLVM IR}\\ typed, SSA, target-neutral (\texttt{.ll}/\texttt{.bc})};
 \node[box,right=of ir] (opt) {\textbf{Optimiser}\\ \texttt{opt}: analysis + transform passes};
 \node[box,right=of opt] (be) {\textbf{Back end}\\ \texttt{llc}: ISel, regalloc, schedule, MC};
@@ -5801,7 +5821,7 @@ This is \textbf{MachineIR (MIR)} right after instruction selection: virtual regi
 \section{MLIR, Triton and the AI-compiler ecosystem \prio{2}}
 \begin{itemize}[nosep]
 \item \textbf{MLIR} (Multi-Level IR, part of the LLVM project) generalises LLVM IR into \emph{dialects} of operations (each with types, attributes and \emph{regions}), so a compiler can keep high-level structure (tensors, loops, GPU kernels) and \emph{progressively lower}: e.g.\ \texttt{linalg} $\to$ \texttt{scf}/\texttt{affine} loops $\to$ \texttt{gpu} $\to$ \texttt{nvvm} $\to$ \texttt{llvm} dialect $\to$ LLVM IR $\to$ PTX. NVIDIA job postings for ``LLVM and MLIR compiler engineer'' (J6) refer to this stack.
-\item \textbf{Triton} (OpenAI) compiles block-level Python kernels through MLIR and LLVM to PTX; \textbf{torch.compile/TorchInductor} generates Triton or C++; \textbf{XLA/OpenXLA} (JAX/TensorFlow), \textbf{TVM}, \textbf{TensorRT} are other ML compilers (Chapter~\ref{ch:ml}).
+\item \textbf{Triton} (OpenAI) compiles block-level Python kernels through MLIR and LLVM to PTX; \textbf{torch.compile} / \textbf{TorchInductor} generates Triton or C++; \textbf{XLA/OpenXLA} (JAX/TensorFlow), \textbf{TVM}, \textbf{TensorRT} are other ML compilers (Chapter~\ref{ch:ml}).
 \end{itemize}
 
 \section{GCC in one paragraph \prio{1}}
@@ -5852,7 +5872,7 @@ Fuzzing / differential & \texttt{llvm-isel-fuzzer}, Csmith, YARPGen & bugs nobod
 \textbf{PASS} (all commands exit 0), \textbf{FAIL}, \textbf{XFAIL} (expected failure, declared with \texttt{XFAIL:}), \textbf{XPASS} (an XFAIL test that now passes: reported as an error so stale expectations get removed), \textbf{UNSUPPORTED} (\texttt{UNSUPPORTED:} or an unmet \texttt{REQUIRES:}), \textbf{UNRESOLVED}, \textbf{TIMEOUT}.
 \end{mustbox}
 \begin{center}\small
-\begin{xltabular}{\textwidth}{@{}L{3.4cm}Y@{}}
+\begin{xltabular}{\textwidth}{@{}L{4.3cm}Y@{}}
 \toprule
 \textbf{Feature} & \textbf{Meaning}\\
 \midrule\endhead
@@ -5861,7 +5881,7 @@ Fuzzing / differential & \texttt{llvm-isel-fuzzer}, Csmith, YARPGen & bugs nobod
 \texttt{REQUIRES: nvptx-registered-target} & run only if the feature exists (targets built, OS, assertions-enabled build \ldots)\\
 \texttt{UNSUPPORTED: system-windows}, \texttt{XFAIL: *} & skip on a configuration; mark as a known failure\\
 \texttt{not cmd}, \texttt{not --crash cmd}, \texttt{count N cmd} & invert the exit status (expect failure); expect a crash; require exactly $N$ lines of output\\
-\texttt{lit -v}, \texttt{-a}, \texttt{-j N}, \texttt{--filter=RE}, \texttt{--timeout=S}, \texttt{--shard=I/N}, \texttt{--xunit-xml-output=f.xml} & show failures, show all commands, parallelism, select tests, time limit, split across CI machines, JUnit-style report for dashboards\\
+\texttt{lit} options & \texttt{-v} show failures, \texttt{-a} show all commands, \texttt{-j N} parallelism, \texttt{--filter=RE} select tests, \texttt{--timeout=S} time limit, \texttt{--shard=I/N} split across CI machines, \texttt{--xunit-xml-output=f.xml} JUnit-style report for dashboards\\
 \bottomrule
 \end{xltabular}
 \end{center}
@@ -6001,9 +6021,9 @@ opt -passes=instcombine -S tests/wrong_expectation.ll | FileCheck tests/wrong_ex
 --
 
 ********************
-PASS: mini-llvm-tests :: tests/mul8.ll (2 of 4)
+PASS: mini-llvm-tests :: tests/identity.ll (2 of 4)
 XFAIL: mini-llvm-tests :: tests/xfail_example.ll (3 of 4)
-PASS: mini-llvm-tests :: tests/identity.ll (4 of 4)
+PASS: mini-llvm-tests :: tests/mul8.ll (4 of 4)
 ********************
 Failed Tests (1):
   mini-llvm-tests :: tests/wrong_expectation.ll
@@ -6059,9 +6079,9 @@ For NVIDIA-style work the analogue is a tiny \emph{PTX} or \emph{CUDA} file, a \
 
 \section{The CUDA compilation pipeline \prio{3}}
 \begin{center}
-\begin{tikzpicture}[node distance=5mm and 8mm,every node/.style={font=\scriptsize},
- box/.style={draw=nvdark,fill=nvgreen!12,rounded corners=2pt,minimum height=8mm,align=center,text width=2.7cm},
- host/.style={draw=black!50,fill=black!5,rounded corners=2pt,minimum height=8mm,align=center,text width=2.7cm},
+\begin{tikzpicture}[node distance=5mm and 6mm,every node/.style={font=\scriptsize},
+ box/.style={draw=nvdark,fill=nvgreen!12,rounded corners=2pt,minimum height=8mm,align=center,text width=2.5cm},
+ host/.style={draw=black!50,fill=black!5,rounded corners=2pt,minimum height=8mm,align=center,text width=2.4cm},
  arr/.style={-{Stealth[length=2mm]},thick,nvdark}]
 \node[box,text width=2.1cm] (cu) {\texttt{kernel.cu}\\ host + device code};
 \node[box,right=of cu,text width=2.4cm] (fe) {\textbf{cudafe++}\\ splits host from device code};
@@ -6069,8 +6089,8 @@ For NVIDIA-style work the analogue is a tiny \emph{PTX} or \emph{CUDA} file, a \
 \node[box,below right=2mm and 12mm of fe] (cicc) {\textbf{cicc} (NVVM)\\ LLVM-based; emits \textbf{PTX}};
 \node[box,right=of cicc] (ptxas) {\textbf{ptxas}\\ PTX $\to$ \textbf{SASS} (cubin)};
 \node[box,right=of ptxas,text width=2.2cm] (fb) {\textbf{fatbinary}\\ cubin(s) + PTX};
-\node[host,right=of hc,text width=3.3cm] (obj) {host object with the fatbin embedded};
-\node[host,right=14mm of obj,text width=2.6cm] (exe) {link $\to$ executable};
+\node[host,right=of hc,text width=2.9cm] (obj) {host object with the fatbin embedded};
+\node[host,right=10mm of obj,text width=2.2cm] (exe) {link $\to$ executable};
 \draw[arr] (cu)--(fe); \draw[arr] (fe.north east)--(hc.west); \draw[arr] (fe.south east)--(cicc.west);
 \draw[arr] (cicc)--(ptxas); \draw[arr] (ptxas)--(fb); \draw[arr] (hc)--(obj); \draw[arr] (obj)--(exe);
 \draw[arr] (fb.north) -- ++(0,4mm) -| (obj.south);
@@ -6147,7 +6167,7 @@ declare i32 @llvm.nvvm.read.ptx.sreg.tid.x() #1
 !0 = !{ptr @_Z6vecaddPKfS0_Pfi, !"kernel", i32 1}
 \end{lstlisting}
 \begin{center}\small
-\begin{xltabular}{\textwidth}{@{}L{3.6cm}L{5.2cm}Y@{}}
+\begin{xltabular}{\textwidth}{@{}L{4.3cm}L{5.3cm}Y@{}}
 \toprule
 \textbf{CUDA construct} & \textbf{NVVM IR} & \textbf{PTX}\\
 \midrule\endhead
@@ -7302,7 +7322,7 @@ int main() {
 $ g++ -O0 -pthread race.cpp && ./a.out      # then again under ThreadSanitizer: g++ -g -fsanitize=thread race.cpp
 \end{lstlisting}
 \begin{lstlisting}[style=out]
-expected 2000000, got 1117832
+expected 2000000, got 1159616
 SUMMARY: ThreadSanitizer: data race race.cpp:4 in work()
 WARNING: ThreadSanitizer: data race 
 \end{lstlisting}
@@ -7672,7 +7692,7 @@ if __name__ == "__main__":
 \end{lstlisting}
 \Needspace*{5\baselineskip}
 \begin{lstlisting}[style=out,basicstyle=\ttfamily\scriptsize,title={Captured output (pure-Python CPU-bound work, 4 jobs)}]
-sequential 0.90s | 4 threads 0.95s | 4 processes 0.35s   (cpus=4, GIL enabled: True)
+sequential 0.89s | 4 threads 0.96s | 4 processes 0.36s   (cpus=4, GIL enabled: True)
 \end{lstlisting}
 Threads give no speed-up (slightly slower: lock hand-over), processes do. Use \texttt{if \_\_name\_\_ == "\_\_main\_\_":} around process pools (on Windows and macOS child processes re-import the module).
 
@@ -7827,10 +7847,10 @@ $ ./split_cases.sh ub_cases.c && ./difftest.sh v_clean.c v_ovf.c v_uninit.c v_al
 program  gcc -O0        gcc -O2        clang -O0      clang -O2      gcc -O2 -uchar verdict
 clean    3976595158     3976595158     3976595158     3976595158     3976595158     agree
 ovf      0              1              0              1              1              DISAGREE
-uninit   32752          5              0              5              5              DISAGREE
+uninit   32631          5              0              5              5              DISAGREE
 alias    1073741824     1              1073741824     1              1              DISAGREE
 order    2 1            2 1            1 2            1 2            2 1            DISAGREE
-shift    1              0              1              1015479064     0              DISAGREE
+shift    1              0              1              196046216      0              DISAGREE
 char     1              1              1              1              0              DISAGREE
 \end{lstlisting}
 Six of the seven programs make the builds \textbf{disagree}, yet \emph{none} of the six disagreements is a compiler bug: each program is wrong, or at best non-portable. Only a disagreement on \texttt{clean} would be a compiler bug. This is why generated tests must be UB-free, and why a mismatch is the \emph{start} of an investigation, not its conclusion. Which tool tells you whose fault it is?
@@ -9020,7 +9040,7 @@ bash: line 1: FileCheck: command not found
   Passed              : 6
   Expectedly Failed   : 1
   Failed              : 3
-40 generated tests, -j 1: 1.46 s;  -j 4: 0.64 s
+40 generated tests, -j 1: 1.70 s;  -j 4: 0.76 s
 shard sizes: [14, 15, 11] | disjoint and complete: True
 \end{lstlisting}
 \subsection{Does the regression suite catch the seeded bugs?}
@@ -9121,9 +9141,9 @@ $ for m in uses-crash invert-lt fold-floor-div: TINYC_MUTANT=$m python3 litlite.
 
 | slowest test | seconds |
 |---|---|
-| gen_002.tiny | 0.11 |
-| gen_007.tiny | 0.11 |
-| gen_012.tiny | 0.10 |
+| gen_000.tiny | 0.13 |
+| gen_034.tiny | 0.11 |
+| gen_003.tiny | 0.10 |
 
 | failure signature | count | tests |
 |---|---|---|
@@ -11170,6 +11190,2240 @@ puzzles & M27--M30 & ``Classic puzzles'': name the shape of the puzzle first\\
 \begin{tipbox}[After the mock test]
 Do not redo the questions you got right. For each miss write one line: ``what I should have noticed'' (a trap, a formula, a unit). Re-sit only those questions the next day; if the same \emph{type} appears twice in your misses, that type is your next 20 minutes.
 \end{tipbox}
+
+
+% ===== 22a-qbank-map.tex.in =====
+\part{Question Bank, Mock OA, Interview Playbook and Appendices}
+\chapter{Question Bank and Mock OA: Reported Questions, Practice and Answers}
+\label{ch:qbank}
+
+\begin{chapbox}
+\textbf{Priority \prio{3} for the mock OA, \prio{2} for the coverage map. Time: 75 min for the mock, 45 min for the review.} Chapter~\ref{ch:intel} collected what candidates reported. This chapter (1) shows, report by report, where in this book each reported question is \emph{answered}, so that you can drill exactly the reported topics, and (2) gives a full-length \textbf{mock OA}: 10 aptitude questions, 22 technical MCQs and 2 coding problems in 75 minutes, shaped like the probable paper reconstructed in Chapter~\ref{ch:intel} (10--15 aptitude, 15--25 technical MCQs, 1--3 coding problems). Every answer was \emph{produced by running code}: the C, C++ and Python snippets were compiled and executed, the compiler questions were computed with the helper programs of Chapters~\ref{ch:parsing}--\ref{ch:opt}, and both coding solutions were stress-tested against brute force.
+\end{chapbox}
+
+\section{Reported versus practice: how to read the labels \prio{2}}
+\begin{itemize}[nosep]
+\item \textbf{S1--S25 and J1--J6} are the numbered sources of Chapter~\ref{ch:intel}. A question marked with an S-number is a \emph{report} of something a candidate says was asked (summarised from search results, not verified at the original page). It is evidence about topics, not a promise about your paper.
+\item \textbf{Everything else} (all \texttt{Q}$n.m$ items, all drills, the mock OA below) is practice material written for this book to cover the same topics. It is not a claim about what NVIDIA asks.
+\item The book contains 148 numbered question--answer pairs (\texttt{Q}$n.m$ with the answer directly below) in Chapters~4--20, plus the output-prediction drills of Chapters~4--6 (all outputs captured from real runs). The mock OA is separate and is meant to be taken \emph{once}, under the clock, after the chapters.
+\end{itemize}
+
+\section{Where every reported question is answered \prio{3}}
+Use this table in two ways: before studying, to see how often a topic was reported; after studying, as a checklist (``could I answer each row without looking?'').
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{1.2cm}Y L{5.1cm}@{}}
+\toprule
+\textbf{Source} & \textbf{Reported (summary)} & \textbf{Answered in this book}\\
+\midrule\endhead
+S1 & Compiler intern: online test (C/C++, data structures, compiler output) and a live \emph{bug hunt} in a $\sim$250-line C program (binary tree $\to$ doubly linked list in spiral order); the candidate missed a call-by-value bug & Ch.\,\ref{ch:c}: ``Find the bugs'', call-by-value; Ch.\,\ref{ch:dsa}: spiral-order list\\
+S2 & LLVM intern: C++ output and recurrences; king paths on a chessboard (all paths, shortest); virtual $\to$ physical memory; phases of a compiler, code-generation and optimisation stages & Ch.\,\ref{ch:dsa}: king paths; Ch.\,\ref{ch:cs}: virtual memory; Ch.\,\ref{ch:front}, \ref{ch:opt}\\
+S3 & LLVM intern: C/C++, data structures, compiler design; code output; cycle detection in a linked list & Ch.\,\ref{ch:dsa}: cycle detection; Ch.\,\ref{ch:c}, \ref{ch:cpp} drills\\
+S4 & Pittsburgh: topological sort $\to$ automatic differentiation and data-flow analysis; why loop unrolling; pointer and dependence analysis & Ch.\,\ref{ch:dsa}: topological sort; Ch.\,\ref{ch:opt}: data-flow, loops and dependences, alias analysis; Ch.\,\ref{ch:ml}: backpropagation\\
+S5 & Austin: projects (C++/GPU); which constructors and destructors run; memory-management problems & Ch.\,\ref{ch:cpp}: object lifetime, RAII; Ch.\,\ref{ch:flash}: project stories\\
+S6 & Shanghai: matrix multiplication ``and all applicable optimisations''; graph colouring & Ch.\,\ref{ch:opt}: matrix multiplication, register allocation; Ch.\,\ref{ch:dsa}: colouring\\
+S7 & Bengaluru: 2-D knapsack DP, stack operations, compiler questions & Ch.\,\ref{ch:dsa}: 2-D knapsack; Ch.\,\ref{ch:front}--\ref{ch:opt}\\
+S8, S10 & Loop unrolling; the most aggressive optimisation of a given IR, with trade-offs; constant substitution, inlining, reordering; \texttt{getelementptr} with \texttt{inbounds} & Ch.\,\ref{ch:opt}: local, loop and interprocedural optimisation; Ch.\,\ref{ch:llvm}: memory addressing, flags, poison\\
+S9 & Pune 2021: round cancelled, coding interviewers gave no hints (fragment only) & Nothing to study; Ch.\,\ref{ch:plan}, \ref{ch:flash}: think aloud, ask for hints\\
+S11, S12 & System-software OA: $\sim$25--28 MCQs on aptitude, DS, algorithms, OS, C/C++ and probability, 2 coding problems; the interview reused OA questions; negative marking varies & Ch.\,\ref{ch:dsa}: greedy; Ch.\,\ref{ch:c}; Ch.\,\ref{ch:cs}; Ch.\,\ref{ch:apt}; Ch.\,\ref{ch:plan}: negative marking\\
+S13 & SDE intern: Trie; DP partition minimising the difference of two sums; aptitude & Ch.\,\ref{ch:dsa}: Trie, subset-sum difference; Ch.\,\ref{ch:apt}\\
+S14, S15 & Pune: C++/Python, Linux, analytical; topics COA, OS, DSA, puzzles, DBMS & Ch.\,\ref{ch:cpp}, \ref{ch:python}; Ch.\,\ref{ch:cs}: shell kit, COA, OS, databases; Ch.\,\ref{ch:apt}: puzzles\\
+S16 & Hardware interns: digital-design MCQs, two C/C++ problems (missing element), 15 questions in 50 minutes with a probability question about three vehicles & Ch.\,\ref{ch:cs}: digital logic, architecture; Ch.\,\ref{ch:dsa}: warm-ups, XOR subarrays; Ch.\,\ref{ch:apt}: Bayes (M18)\\
+S17 & Older CAD/ASIC and systems software: bit-shifting of characters; ``C only: memory allocation and bits'' & Ch.\,\ref{ch:c}: bit manipulation, dynamic memory\\
+S18 & General SWE: 75-minute screen, 3 coding questions in 90 minutes, formats depend on the team (one team C only) & Ch.\,\ref{ch:plan}: OA tactics; Ch.\,\ref{ch:dsa}\\
+S19 & Take-home: palindrome, shuffle a playlist so that no two songs of an artist are adjacent, $O(1)$ init/get/set/reset structure & Ch.\,\ref{ch:dsa}: reorganise a string, $O(1)$ design\\
+S20, S21 & 40-question written test (C/C++ output, OS, aptitude), pair-sum in C; ``AI or statistics'' & Ch.\,\ref{ch:dsa}: warm-ups; Ch.\,\ref{ch:c}; Ch.\,\ref{ch:apt}; Ch.\,\ref{ch:ml}\\
+S22, S23 & Pointer output, endianness, storage of variables, templates and \texttt{inline}; C++ concepts, virtual functions, abstract classes, \texttt{extern}, compilation errors & Ch.\,\ref{ch:c}: memory layout, pointers, endianness; Ch.\,\ref{ch:cpp}: polymorphism, templates\\
+S24 & C++ class with operator overloading and copy constructor; deep versus shallow copy; stack versus heap; RAII & Ch.\,\ref{ch:cpp}: operator overloading, rule of 0/3/5, RAII\\
+S25 & \texttt{memcpy}/\texttt{memmove} from scratch; LRU cache & Ch.\,\ref{ch:c}: reimplement the library; Ch.\,\ref{ch:dsa}: LRU cache\\
+J1--J6 & Postings: verification infrastructure for embedded GPUs, strong C/C++ and Python, compilers and ML, parallel programming, automation; senior postings add ML, formal verification, fuzzing, shell/Perl scripting, ISO~26262; LLVM/MLIR & Ch.\,\ref{ch:verif}, \ref{ch:lab}; Ch.\,\ref{ch:ml}; Ch.\,\ref{ch:par}; Ch.\,\ref{ch:python}, \ref{ch:cs}: shell kit; Ch.\,\ref{ch:llvm}\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+\begin{mustbox}[What the map says about your last six hours]
+The densest rows are C/C++ output and memory (S1, S3, S5, S12, S17, S22--S24), data-structure coding (S1--S3, S6, S7, S11, S13, S16, S19, S20, S25) and optimisation concepts (S2, S4, S6, S8, S10). If you can answer every row of these three groups aloud, you have covered most of what was reported. The mock OA below samples all three, plus aptitude, OS/architecture, ML and Python.
+\end{mustbox}
+
+
+% ===== 22b-qbank-mock.tex.in =====
+\section{Mock OA \#1: 75 minutes, 34 items \prio{3}}\label{sec:mockoa}
+\newcommand{\tqhead}[2]{\par\medskip\Needspace*{7\baselineskip}\noindent\textbf{\color{qviolet}#1.}\ #2\par\nopagebreak}
+\newcommand{\tqopts}[4]{\noindent\hspace*{1.4em}\textbf{(A)}~#1\qquad\textbf{(B)}~#2\qquad\textbf{(C)}~#3\qquad\textbf{(D)}~#4\par}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{4.2cm}L{1.6cm}L{1.8cm}Y@{}}
+\toprule
+\textbf{Section} & \textbf{Items} & \textbf{Time} & \textbf{Notes}\\
+\midrule\endhead
+A. Aptitude (A1--A10) & 10 & 12 min & one mark each; formulas of Chapter~\ref{ch:apt}\\
+B. Technical MCQs (T1--T22) & 22 & 28 min & C/C++ output, compilers, OS/architecture, ML, Python; one mark each\\
+C. Coding (C1, C2) & 2 & 35 min & partial credit by test cases; any language you like (solutions are in C++)\\
+\bottomrule
+\end{xltabular}
+\end{center}
+\textbf{Rules.} One sitting, a timer, pen and paper, no compiler and no notes (the real test has none either); read all three sections for two minutes first, then attack in the order of Chapter~\ref{ch:plan} (aptitude, short MCQs, the easier coding problem, harder MCQs, the other coding problem). Assume no negative marking but mark guesses with a star so that you can review them. The code questions assume a typical 64-bit Linux system (LP64) and a recent GCC or Clang with the default settings; a question is only included if every compiler tried gives the same answer.
+
+\subsection*{Section A: aptitude (12 minutes)}
+\tqhead{A1}{A trader sells two articles at Rs~1200 each, one at a 20\% gain and the other at a 20\% loss. Overall he has}
+\tqopts{no gain, no loss}{a 4\% loss}{a 4\% gain}{a 2\% loss}
+\tqhead{A2}{Two trains of lengths 120~m and 180~m run on parallel tracks in opposite directions at 54~km/h and 36~km/h. The time they take to cross each other is (s)}
+\tqopts{8}{10}{12}{15}
+\tqhead{A3}{A's salary is 25\% more than B's. B's salary is less than A's by}
+\tqopts{20\%}{25\%}{30\%}{33.3\%}
+\tqhead{A4}{The average of five numbers is 20. When one of them is removed the average of the other four is 18. The removed number is}
+\tqopts{26}{28}{30}{32}
+\tqhead{A5}{How many three-digit numbers are divisible by 7?}
+\tqopts{126}{127}{128}{129}
+\tqhead{A6}{One card is drawn at random from a standard 52-card deck. The probability that it is a king or a heart is}
+\tqopts{$\frac{15}{52}$}{$\frac{17}{52}$}{$\frac12$}{$\frac4{13}$}
+\tqhead{A7}{In how many ways can 5 people sit around a round table if two particular people must sit together?}
+\tqopts{6}{12}{24}{48}
+\tqhead{A8}{Find the next term: 5, 11, 23, 47, ?}
+\tqopts{91}{93}{95}{97}
+\tqhead{A9}{Statements: Some compilers are tools. All tools are programs. Conclusions: I.\ Some compilers are programs. II.\ All programs are tools.}
+\tqopts{Only I follows}{Only II follows}{Both follow}{Neither follows}
+\tqhead{A10}{Three boxes are labelled ``apples'', ``oranges'' and ``mixed'', but every label is wrong. What is the smallest number of fruits you must take out (and look at) to be certain of the contents of every box?}
+\tqopts{0}{2}{3}{1}
+
+\subsection*{Section B: technical MCQs (28 minutes)}
+\tqhead{T1}{What is printed? (C, typical 64-bit Linux)}
+\begin{lstlisting}[language={C},basicstyle=\ttfamily\scriptsize]
+#include <stdio.h>
+int main(void) {
+    unsigned char c = 200;
+    c += 100;
+    printf("%d\n", c);
+    return 0;
+}
+\end{lstlisting}
+\tqopts{\texttt{300}}{\texttt{44}}{\texttt{0}}{\texttt{-212}}
+\tqhead{T2}{What is printed? (LP64: \texttt{int} has 4 bytes and 4-byte alignment)}
+\begin{lstlisting}[language={C},basicstyle=\ttfamily\scriptsize]
+#include <stdio.h>
+struct S1 { char a; int b; char c; };
+struct S2 { char a; char c; int b; };
+int main(void) {
+    printf("%zu %zu\n", sizeof(struct S1), sizeof(struct S2));
+    return 0;
+}
+\end{lstlisting}
+\tqopts{\texttt{12 12}}{\texttt{6 6}}{\texttt{12 8}}{\texttt{9 8}}
+\tqhead{T3}{What is printed?}
+\begin{lstlisting}[language={C},basicstyle=\ttfamily\scriptsize]
+#include <stdio.h>
+#define SQ(x) x * x
+int main(void) {
+    printf("%d\n", SQ(2 + 3));
+    return 0;
+}
+\end{lstlisting}
+\tqopts{\texttt{25}}{\texttt{10}}{\texttt{13}}{\texttt{11}}
+\tqhead{T4}{What is printed?}
+\begin{lstlisting}[language={C},basicstyle=\ttfamily\scriptsize]
+#include <stdio.h>
+int main(void) {
+    int i = 0, j = 0;
+    if (i++ && j++) { }
+    printf("%d %d\n", i, j);
+    return 0;
+}
+\end{lstlisting}
+\tqopts{\texttt{1 1}}{\texttt{1 0}}{\texttt{0 0}}{\texttt{2 0}}
+\tqhead{T5}{What is printed? (64-bit pointers)}
+\begin{lstlisting}[language={C},basicstyle=\ttfamily\scriptsize]
+#include <stdio.h>
+void f(int a[10]) { printf("%zu ", sizeof a); }
+int main(void) {
+    int a[10];
+    f(a);
+    printf("%zu\n", sizeof a);
+    return 0;
+}
+\end{lstlisting}
+\tqopts{\texttt{40 40}}{\texttt{8 8}}{\texttt{8 40}}{\texttt{40 8}}
+\tqhead{T6}{What is printed?}
+\begin{lstlisting}[language={[11]C++},basicstyle=\ttfamily\scriptsize]
+#include <iostream>
+struct A { A() { std::cout << "A"; } ~A() { std::cout << "a"; } };
+struct B : A {
+    A m;
+    B() { std::cout << "B"; }
+    ~B() { std::cout << "b"; }
+};
+int main() { B b; }
+\end{lstlisting}
+\tqopts{\texttt{ABba}}{\texttt{AABbaa}}{\texttt{AABaab}}{\texttt{ABbaa}}
+\tqhead{T7}{What is printed?}
+\begin{lstlisting}[language={[11]C++},basicstyle=\ttfamily\scriptsize]
+#include <iostream>
+struct B { virtual void f(int x = 1) { std::cout << "B" << x; } };
+struct D : B { void f(int x = 2) override { std::cout << "D" << x; } };
+int main() {
+    D d;
+    B& r = d;
+    r.f();
+}
+\end{lstlisting}
+\tqopts{\texttt{B1}}{\texttt{B2}}{\texttt{D1}}{\texttt{D2}}
+\tqhead{T8}{What is printed?}
+\begin{lstlisting}[language={[11]C++},basicstyle=\ttfamily\scriptsize]
+#include <iostream>
+struct C {
+    static int n;
+    C() { ++n; }
+    C(const C&) { ++n; }
+    ~C() { --n; }
+};
+int C::n = 0;
+C f(C c) { return c; }
+int main() {
+    C a;
+    C b = f(a);
+    std::cout << C::n << "\n";
+}
+\end{lstlisting}
+\tqopts{\texttt{2}}{\texttt{3}}{\texttt{1}}{\texttt{4}}
+\tqhead{T9}{For $E\to TE'$, $E'\to +TE'\mid\varepsilon$, $T\to FT'$, $T'\to *FT'\mid\varepsilon$, $F\to(E)\mid\mathrm{id}$, the set $\mathrm{FOLLOW}(T)$ is}
+\tqopts{\texttt{\{*, +, ), \$\}}}{\texttt{\{+, \$\}}}{\texttt{\{(, id, +\}}}{\texttt{\{+, ), \$\}}}
+\tqhead{T10}{The LR(0) automaton of $S\to AA$, $A\to aA\mid b$ (augmented with $S'\to S$) has how many states?}
+\tqopts{\texttt{5}}{\texttt{6}}{\texttt{7}}{\texttt{8}}
+\tqhead{T11}{What is printed?}
+\begin{lstlisting}[language={C},basicstyle=\ttfamily\scriptsize]
+#include <stdio.h>
+int main(void) {
+    int a, b = 1, c = 2;
+    a = b+++c;
+    printf("a=%d b=%d\n", a, b);
+    return 0;
+}
+\end{lstlisting}
+\tqopts{\texttt{a=3 b=2}}{\texttt{a=4 b=2}}{\texttt{a=3 b=1}}{\texttt{compile error}}
+\tqhead{T12}{The number of basic blocks in this three-address code is}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+1:  a = 1
+2:  b = 2
+3:  if a > b goto 7
+4:  c = a + b
+5:  d = c * 2
+6:  goto 9
+7:  c = a - b
+8:  d = c * 3
+9:  e = c + d
+10: return e
+\end{lstlisting}
+\tqopts{\texttt{3}}{\texttt{5}}{\texttt{4}}{\texttt{6}}
+\tqhead{T13}{After constant folding, constant propagation, algebraic simplification and dead-code elimination the program becomes}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+a = 2 + 3;
+b = a * 4;
+c = b - 20;
+d = c + n;
+print(d);
+\end{lstlisting}
+\tqopts{\texttt{print(n + 0)}}{\texttt{print(n)}}{\texttt{d = n; print(d)}}{\texttt{print(c + n)}}
+\tqhead{T14}{An interference graph has the edges $ab,bc,cd,de,ea$ (a 5-cycle) and a sixth node $f$ adjacent to all of $a,\dots,e$. The minimum number of registers (colours) is}
+\tqopts{\texttt{2}}{\texttt{3}}{\texttt{5}}{\texttt{4}}
+\tqhead{T15}{With 3 frames, the reference string 7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1 causes how many page faults under LRU?}
+\tqopts{\texttt{12}}{\texttt{9}}{\texttt{15}}{\texttt{10}}
+\tqhead{T16}{A 4-way set-associative cache has 32~KB capacity and 64-byte blocks; physical addresses have 40 bits. The number of tag bits is}
+\tqopts{\texttt{27}}{\texttt{26}}{\texttt{29}}{\texttt{24}}
+\tqhead{T17}{Processes P1, P2, P3 arrive together with CPU bursts of 24, 3 and 3~ms. With round robin and a 4~ms quantum the average waiting time is (ms)}
+\tqopts{\texttt{4.33}}{\texttt{5.00}}{\texttt{5.67}}{\texttt{6.33}}
+\tqhead{T18}{80\% of a program's running time is perfectly parallelisable. The best speed-up on 8 processors is}
+\tqopts{\texttt{8}}{\texttt{3.33}}{\texttt{6.4}}{\texttt{5}}
+\tqhead{T19}{A classifier has TP = 40, FP = 10, FN = 20 and TN = 30. Its F1 score is}
+\tqopts{\texttt{0.727}}{\texttt{0.667}}{\texttt{0.800}}{\texttt{0.571}}
+\tqhead{T20}{Gradient descent on $f(x)=(x-3)^2$ with learning rate $0.25$ starts at $x_0=0$. After two updates $x_2$ equals}
+\tqopts{\texttt{3}}{\texttt{1.5}}{\texttt{0.75}}{\texttt{2.25}}
+\tqhead{T21}{What is printed?}
+\begin{lstlisting}[language={Python},basicstyle=\ttfamily\scriptsize]
+def f(x, acc=[]):
+    acc.append(x)
+    return acc
+print(f(1), f(2), f(3, []))
+\end{lstlisting}
+\tqopts{\texttt{[1, 2] [1, 2] [3]}}{\texttt{[1] [2] [3]}}{\texttt{[1] [1, 2] [3]}}{\texttt{[1, 2] [2] [3]}}
+\tqhead{T22}{What is printed?}
+\begin{lstlisting}[language={Python},basicstyle=\ttfamily\scriptsize]
+fs = [lambda: i for i in range(3)]
+print([f() for f in fs])
+\end{lstlisting}
+\tqopts{\texttt{[0, 1, 2]}}{\texttt{[0, 0, 0]}}{\texttt{[3, 3, 3]}}{\texttt{[2, 2, 2]}}
+
+\subsection*{Section C: coding (35 minutes)}
+\tqhead{C1 (about 15 minutes)}{\textbf{Register pressure.} A compiler has computed, for each of $n$ virtual registers, a live range $[s_i,e_i)$ of instruction indices with $s_i<e_i$ (half-open: a value that dies at $e$ and one that is born at $e$ do not overlap). Two virtual registers with overlapping live ranges need different physical registers. Print the minimum number of physical registers and an assignment (the physical register of every virtual register). Constraints: $1\le n\le2\cdot10^5$, $0\le s_i<e_i\le10^9$. Example: $[0,3),[1,4),[2,5),[3,6)$ needs 3 registers, for instance $0\ 1\ 2\ 0$.}
+\tqhead{C2 (about 20 minutes)}{\textbf{Maximum XOR.} Given $n$ integers $0\le a_i<2^{30}$, print the largest value of $a_i\oplus a_j$ over all pairs $i\ne j$. Constraints: $2\le n\le2\cdot10^5$. Example: $3,10,5,25,2,8$ gives $28$ (that is $5\oplus25$).}
+\begin{trapbox}[Before you code]
+Write the constraint-to-complexity line first ($n=2\cdot10^5$ rules out $\Theta(n^2)$), then a brute force (it is your test oracle), then the fast solution, then a random comparison on small inputs. The solutions below follow exactly that order.
+\end{trapbox}
+
+\section{Answer key with working \prio{3}}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{0.9cm}L{0.7cm}Y@{}}
+\toprule
+\textbf{Q} & \textbf{Key} & \textbf{Working}\\
+\midrule\endhead
+A1 & \textbf{B} & Cost prices: $1200/1.2=1000$ and $1200/0.8=1500$, together 2500 against 2400 received: a loss of $100/2500=4\%$ (equal percentage gain and loss on equal selling prices always loses).\\
+A2 & \textbf{C} & Relative speed $54+36=90$~km/h $=25$~m/s; distance $120+180=300$~m; $300/25=12$~s.\\
+A3 & \textbf{A} & B $=100$, A $=125$; the gap 25 is $25/125=20\%$ of A (percentages are not symmetric).\\
+A4 & \textbf{B} & Sum $=100$, sum of the other four $=72$, removed number $=28$.\\
+A5 & \textbf{C} & From $105=7\cdot15$ to $994=7\cdot142$: $142-15+1=128$.\\
+A6 & \textbf{D} & $\frac4{52}+\frac{13}{52}-\frac1{52}=\frac{16}{52}=\frac4{13}$: the king of hearts must not be counted twice (the trap is $\frac{17}{52}$).\\
+A7 & \textbf{B} & Glue the pair into one block: 4 units round a table give $(4-1)!=6$ arrangements, times 2 orders inside the block: 12.\\
+A8 & \textbf{C} & The differences $6,12,24$ double, so the next difference is $48$ and $47+48=95$ (equivalently $a_{n+1}=2a_n+1$).\\
+A9 & \textbf{A} & ``Some $A$ are $B$'' with ``All $B$ are $C$'' gives ``Some $A$ are $C$'' (I). II is the converse of the second statement and does not follow: programs need not all be tools.\\
+A10 & \textbf{D} & Take one fruit from the box labelled ``mixed'': that box is not mixed, so it holds only what the fruit shows, and the two remaining labels then fall into place because every label is wrong (the script enumerates both consistent worlds).\\
+T1 & \textbf{B} & \texttt{c} is promoted to \texttt{int}, $200+100=300$ is computed, and the store back into the 8-bit \texttt{unsigned char} wraps modulo 256: $300-256=44$.\\
+T2 & \textbf{C} & \texttt{S1}: \texttt{a} at 0, 3 bytes of padding, \texttt{b} at 4--7, \texttt{c} at 8, 3 bytes of tail padding so that arrays stay aligned: 12. \texttt{S2}: \texttt{a}, \texttt{c}, 2 bytes of padding, \texttt{b}: 8. Ordering members from large to small removes padding.\\
+T3 & \textbf{D} & The macro is textual: \texttt{2 + 3 * 2 + 3} $=11$. Parenthesise: \texttt{((x) * (x))}.\\
+T4 & \textbf{B} & \texttt{i++} yields 0 (and sets \texttt{i} to 1), so \texttt{\&\&} short-circuits and \texttt{j++} is never evaluated.\\
+T5 & \textbf{C} & A parameter declared \texttt{int a[10]} is really \texttt{int *a}: \texttt{sizeof a} is 8 inside \texttt{f}, 40 in \texttt{main}.\\
+T6 & \textbf{B} & Construction: base \texttt{A}, then the member \texttt{m} (an \texttt{A}), then the body of \texttt{B}: \texttt{AAB}. Destruction in the exact reverse order: body \texttt{b}, member \texttt{a}, base \texttt{a}.\\
+T7 & \textbf{C} & The call dispatches to \texttt{D::f} (virtual), but a default argument is bound \emph{statically} to the type of the reference (\texttt{B\&}), so \texttt{x} is 1.\\
+T8 & \textbf{A} & \texttt{a}: $n=1$. The parameter \texttt{c} is a copy: 2. \texttt{return c} copies it into the result object (a parameter is not eligible for named-return-value optimisation): 3. \texttt{c} is destroyed: 2. The result initialises \texttt{b} directly (guaranteed elision since C++17, and in practice before). Live objects: \texttt{a} and \texttt{b}.\\
+T9 & \textbf{D} & $T$ is followed by $\mathrm{FIRST}(E')=\{+\}$; since $E'$ can vanish, it also inherits $\mathrm{FOLLOW}(E)=\{\mathtt{)},\$\}$. The set has no $*$: $*$ follows $F$, not $T$.\\
+T10 & \textbf{C} & $I_0$ on $S,A,a,b$ gives four states; $I_2=\{S\to A\cdot A\}$ on $A$ gives $S\to AA\cdot$, and on $a$, $b$ returns to the states of $a$ and $b$; $A\to a\cdot A$ on $A$ gives $A\to aA\cdot$. Seven in all.\\
+T11 & \textbf{A} & Maximal munch: the lexer takes the longest token each time, so \texttt{b+++c} is \texttt{b ++ + c}, i.e.\ \texttt{(b++) + c}: $a=1+2=3$ and \texttt{b} becomes 2.\\
+T12 & \textbf{C} & Leaders: instruction 1, the jump targets 7 and 9, and the instructions after a jump (4 after the conditional, 7 after the \texttt{goto}): $\{1,4,7,9\}$, so the blocks are 1--3, 4--6, 7--8 and 9--10.\\
+T13 & \textbf{B} & $a=5$, $b=20$, $c=0$, so $d=0+n=n$ (algebraic identity); the assignments are dead. The mini compiler of Chapter~\ref{ch:sem} produces exactly this.\\
+T14 & \textbf{D} & An odd cycle needs 3 colours, and $f$ touches all of them, so a 4th colour is needed (exhaustive search confirms that 3 do not suffice and 4 do).\\
+T15 & \textbf{A} & LRU: 12 faults (FIFO gives 15 and the unrealisable optimal policy 9 --- all three simulated).\\
+T16 & \textbf{A} & Offset $\log_2 64=6$ bits; sets $=32768/(64\cdot4)=128$, index 7 bits; tag $=40-7-6=27$.\\
+T17 & \textbf{C} & P1 runs 0--4, P2 4--7, P3 7--10, then P1 alone until 30. Waiting times: P1 $=30-24=6$, P2 $=4$, P3 $=7$; average $17/3=5.67$.\\
+T18 & \textbf{B} & $S=1/\big((1-f)+f/p\big)=1/(0.2+0.1)=3.33$; even with infinitely many processors the limit is 5.\\
+T19 & \textbf{A} & Precision $40/50=0.8$, recall $40/60=0.667$; $F_1=\frac{2PR}{P+R}=\frac8{11}=0.727$ (TN is not used).\\
+T20 & \textbf{D} & $f'(x)=2(x-3)$: $x_1=0-0.25\cdot(-6)=1.5$, $x_2=1.5-0.25\cdot(-3)=2.25$ (each step closes half of the remaining gap).\\
+T21 & \textbf{A} & The default list is created once, when \texttt{def} executes. \texttt{f(1)} and \texttt{f(2)} return the \emph{same} list, which has grown to \texttt{[1, 2]} by the time \texttt{print} runs; \texttt{f(3, [])} gets a fresh list.\\
+T22 & \textbf{D} & Closures capture the \emph{variable} \texttt{i}, not its value; after the comprehension \texttt{i} is 2. (Fix: \texttt{lambda i=i: i}.)\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+\subsection{Every key recomputed \prio{1}}
+The key was typed by hand. The program below recomputes each answer independently and checks that exactly one option equals the computed value and that it is the keyed one: the snippets of the C, C++ and Python questions are \emph{compiled and run}, the compiler questions call the programs of Chapters~\ref{ch:parsing}--\ref{ch:sem} (FIRST/FOLLOW, LR(0) automaton, the mini compiler), and the OS, architecture and ML answers are simulated or evaluated exactly.
+
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[style=out,basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={oa\_check.py: output}]
+A1   computed -4                     matches option B  key B  ok
+A2   computed 12                     matches option C  key C  ok
+A3   computed 20                     matches option A  key A  ok
+A4   computed 28                     matches option B  key B  ok
+A5   computed 128                    matches option C  key C  ok
+A6   computed 4/13                   matches option D  key D  ok
+A7   computed 12                     matches option B  key B  ok
+A8   computed 95                     matches option C  key C  ok
+A9   computed (I)                    matches option A  key A  ok
+A10  computed 1                      matches option D  key D  ok
+T1   computed 44                     matches option B  key B  ok
+T2   computed 12 8                   matches option C  key C  ok
+T3   computed 11                     matches option D  key D  ok
+T4   computed 1 0                    matches option B  key B  ok
+T5   computed 8 40                   matches option C  key C  ok
+T6   computed AABbaa                 matches option B  key B  ok
+T7   computed D1                     matches option C  key C  ok
+T8   computed 2                      matches option A  key A  ok
+T9   computed ['$', ')', '+']        matches option D  key D  ok
+T10  computed 7                      matches option C  key C  ok
+T11  computed a=3 b=2                matches option A  key A  ok
+T12  computed 4                      matches option C  key C  ok
+T13  computed print(n)               matches option B  key B  ok
+T14  computed 4                      matches option D  key D  ok
+T15  computed 12                     matches option A  key A  ok
+T16  computed 27                     matches option A  key A  ok
+T17  computed 5.67                   matches option C  key C  ok
+T18  computed 3.33                   matches option B  key B  ok
+T19  computed 0.727                  matches option A  key A  ok
+T20  computed 2.25                   matches option D  key D  ok
+T21  computed [1, 2] [1, 2] [3]      matches option A  key A  ok
+T22  computed [2, 2, 2]              matches option D  key D  ok
+32 of 32 answer-key entries confirmed (exactly one option equals the computed value, and it is the keyed one)
+page faults, reference string of question T15, 3 frames: LRU 12, FIFO 15, OPT 9
+\end{lstlisting}
+
+\section{Coding solutions, tested \prio{3}}
+\subsection{C1: register pressure}
+\textbf{Approach.} Sort the virtual registers by start. Keep the live values in a min-heap ordered by end. At each start, first release every register whose value has ended ($e\le s$), then reuse a released register or open a new one. Interval graphs are perfect, so the answer equals the maximum number of simultaneously live values (a sweep over start and end events gives the same number); the test prints both. $O(n\log n)$. This \emph{is} linear-scan register allocation (Chapter~\ref{ch:opt}); a real allocator must also spill when the physical registers run out.
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[language={[11]C++},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={C1 solution (C++)}]
+#include <bits/stdc++.h>
+using namespace std;
+
+pair<int, vector<int>> allocate(const vector<pair<int, int>>& live) {
+    int n = live.size();
+    vector<int> order(n), reg(n);
+    iota(order.begin(), order.end(), 0);
+    sort(order.begin(), order.end(), [&](int a, int b) { return live[a].first < live[b].first; });
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> active;    // (end, register) of live values
+    vector<int> freeRegs;                                                        // registers released so far
+    int used = 0;
+    for (int v : order) {
+        while (!active.empty() && active.top().first <= live[v].first) {         // [s, e): end == start does not overlap
+            freeRegs.push_back(active.top().second);
+            active.pop();
+        }
+        int r;
+        if (freeRegs.empty()) r = used++;
+        else { r = freeRegs.back(); freeRegs.pop_back(); }
+        reg[v] = r;
+        active.push({live[v].second, r});
+    }
+    return {used, reg};
+}
+\end{lstlisting}
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[style=out,basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={C1: sample, stress test against exhaustive search, maximum size}]
+sample: 3 registers; assignment: 0 1 2 0
+stress test: 3000 random cases agree with exhaustive search
+n = 200000: 165 registers = maximum overlap 165: ok
+\end{lstlisting}
+\subsection{C2: maximum XOR}
+\textbf{Approach.} Insert the numbers into a binary trie of 30 levels. For each number walk down choosing the \emph{opposite} bit whenever that child exists: this makes each bit of the XOR a 1 greedily from the most significant end, which is right because one higher bit outweighs all lower bits together. Querying before inserting keeps $i\ne j$ automatic. $O(30n)$ time and memory. (A trie-free alternative builds the answer bit by bit with a hash set of prefixes; the trie is the one reported in the Trie-themed questions of Chapter~\ref{ch:intel}.)
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[language={[11]C++},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={C2 solution (C++)}]
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Trie {
+    vector<array<int, 2>> next{{-1, -1}};                       // node 0 is the root
+    void insert(unsigned x) {
+        int v = 0;
+        for (int b = 29; b >= 0; b--) {
+            int bit = (x >> b) & 1;
+            if (next[v][bit] < 0) { next[v][bit] = next.size(); next.push_back({-1, -1}); }
+            v = next[v][bit];
+        }
+    }
+    unsigned best(unsigned x) const {                           // maximise x ^ y over inserted y
+        int v = 0;
+        unsigned res = 0;
+        for (int b = 29; b >= 0; b--) {
+            int want = 1 - ((x >> b) & 1);                      // the opposite bit makes this bit of the XOR a 1
+            if (next[v][want] >= 0) { res |= 1u << b; v = next[v][want]; }
+            else v = next[v][1 - want];
+        }
+        return res;
+    }
+};
+
+unsigned maxXor(const vector<unsigned>& a) {                    // requires a.size() >= 2
+    Trie t;
+    t.insert(a[0]);
+    unsigned ans = 0;
+    for (size_t i = 1; i < a.size(); i++) {                     // query before inserting: i != j is automatic
+        ans = max(ans, t.best(a[i]));
+        t.insert(a[i]);
+    }
+    return ans;
+}
+\end{lstlisting}
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[style=out,basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={C2: sample, stress test against the O(n\^{}2) loop, maximum size}]
+sample [3 10 5 25 2 8]: 28 (5 ^ 25 = 28)
+stress test: 3000 random cases agree with the O(n^2) loop
+n = 200000: maximum XOR 1073741823 (2^30 - 1 = 1073741823)
+\end{lstlisting}
+
+\section{After the mock: scoring and the error log \prio{3}}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{3.2cm}L{3.2cm}Y@{}}
+\toprule
+\textbf{Result} & \textbf{Reading} & \textbf{What to do next}\\
+\midrule\endhead
+A: $\ge8$ of 10 & on target & keep the Chapter~\ref{ch:apt} formula sheet for the last hour\\
+B: $\ge17$ of 22 & on target & re-read only the explanations of the misses\\
+C: both pass all tests & on target & write the brute force \emph{first} next time (it saved you)\\
+any section below 60\% & weak area & study the chapter named in the table below for 40 minutes, then redo only those questions tomorrow\\
+\bottomrule
+\end{xltabular}
+\end{center}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{3.6cm}L{3.4cm}Y@{}}
+\toprule
+\textbf{Questions missed} & \textbf{Chapter} & \textbf{Typical root cause}\\
+\midrule\endhead
+T1--T5, T11 & \ref{ch:c} & promotion, padding, macro expansion, short-circuit, array-to-pointer decay, maximal munch\\
+T6--T8, T22 & \ref{ch:cpp}, \ref{ch:python} & construction/destruction order, static default arguments, elision, late binding\\
+T9, T10, T12--T14 & \ref{ch:parsing}--\ref{ch:opt} & FOLLOW rules, LR automaton, leaders, folding, colouring\\
+T15--T18 & \ref{ch:cs} & replacement policies, address bits, scheduling timeline, Amdahl\\
+T19--T21 & \ref{ch:ml}, \ref{ch:python} & F1 from the confusion matrix, learning-rate step, mutable default\\
+A1--A10 & \ref{ch:apt} & the traps of the trap box: percentages, harmonic means, complements\\
+C1, C2 & \ref{ch:dsa} & constraint $\to$ complexity, heap and trie patterns, missing brute force\\
+\bottomrule
+\end{xltabular}
+\end{center}
+\begin{tipbox}[Error log (copy this into your notes)]
+One line per miss: \emph{question $\mid$ my answer $\mid$ correct $\mid$ category (concept, careless, time) $\mid$ the rule in one sentence}. In the last hour read the log, not the chapters.
+\end{tipbox}
+
+
+% ===== 23a-interview.tex.in =====
+\chapter{Interview Playbook: Answers, Projects, Flashcards, Behavioural}
+\label{ch:flash}
+
+\begin{chapbox}
+\textbf{Priority \prio{3} for the model answers and project stories, \prio{2} for the flashcards. Time: 90 min (the flashcards at one minute per ten cards if you cover the answer, say it aloud, then compare).} Chapter~\ref{ch:intel} reports one or two technical rounds of 30--60 minutes followed by a managerial or HR conversation; compiler loops are often \emph{verbal}, start with your projects, and go several levels deep into one detail. This chapter is about \emph{saying} what you know: a protocol for concept, coding and bug-hunt questions, model answers to the most-reported verbal questions, a template for project stories (with three fall-back stories that use the labs of this book \emph{honestly}), 110 flashcards, behavioural answers and good questions to ask.
+\end{chapbox}
+
+\section{How to answer \prio{3}}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{3.1cm}Y@{}}
+\toprule
+\textbf{Question type} & \textbf{Protocol (say each step aloud)}\\
+\midrule\endhead
+concept (``what is\ldots, why\ldots'') & \textbf{definition} in one sentence $\to$ \textbf{mechanism} (how it works, with a three-line example) $\to$ \textbf{trade-off} (when it helps, when it hurts) $\to$ \textbf{how you would test or measure it}. Stop after about 90 seconds and ask ``shall I go deeper on\ldots?''; the interviewer steers the depth.\\
+coding & restate the problem and ask about the constraints $\to$ a small example and the edge cases $\to$ the brute force and its complexity $\to$ the better idea $\to$ code $\to$ run the example by hand $\to$ complexity. Say the brute force even if you know the fast solution: it is your test oracle.\\
+bug hunt (``find the bugs'') & read once for structure; then walk through every pointer, index, size and ownership transfer; list suspects \emph{as you find them} (do not wait for a perfect list); finally say how you would confirm (\texttt{-Wall -Wextra}, sanitizers, a unit test). See Chapter~\ref{ch:c}.\\
+output prediction & look for the trap first (integer promotion, precedence, macro expansion, evaluation order, \texttt{sizeof} of a pointer, uninitialised data, undefined behaviour); then trace; if the behaviour is undefined, say so and say what a typical implementation does.\\
+design (LRU, rate limiter, test infrastructure) & requirements and scale $\to$ API $\to$ data structures and complexity $\to$ failure modes and tests. For verification infrastructure: inputs $\to$ oracle $\to$ triage $\to$ reduction $\to$ reporting (Chapter~\ref{ch:lab}).\\
+stuck & say what you \emph{know}, name the sub-problem you are stuck on, try a smaller case, ask for a hint. Never bluff: a wrong confident answer costs more than ``I am not sure, I would check\ldots''.\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+\section{Model answers to the most-reported verbal questions \prio{3}}
+\begin{srcbox}[Why these four?]
+They are the verbal questions reported most often for compiler roles: loop unrolling (S4, S8, S10), SSA and data-flow (S4, S8), ``what happens when you compile and run a C program'' (S2) and virtual memory (S2). Each answer below is about 90 seconds spoken.
+\end{srcbox}
+\begin{exbox}[``Explain loop unrolling.'']
+\textbf{Definition.} Unrolling replicates the loop body $k$ times and adjusts the counter so that one iteration of the new loop does $k$ iterations of the old one: \texttt{for (i=0;i<n;i++) s+=a[i];} becomes four accumulations per iteration plus a \emph{remainder} loop for the last $n \bmod 4$ elements.
+\textbf{Why it helps.} Fewer branches and counter updates; a longer basic block gives the scheduler more independent instructions (several accumulators break the dependence chain on \texttt{s}); it exposes redundancy and vectorisation; with a small constant trip count a \emph{full} unroll removes the loop and enables constant folding.
+\textbf{Why it hurts.} Larger code (instruction-cache pressure), more live values (register pressure and spills), and a remainder loop; the benefit vanishes when the body is already large or memory-bound.
+\textbf{How the compiler decides.} A cost model: trip count (known or cheap to check), body size, target (GPU compilers unroll aggressively because they have no branch predictor to help), and pragmas.
+\end{exbox}
+\begin{exbox}[``What is SSA and why do compilers use it?'']
+\textbf{Definition.} Static single assignment: every variable is assigned exactly once, and at a join of control flow a $\phi$-function selects the value according to the incoming edge. \textbf{Why.} Def--use chains become explicit, so constant propagation, dead-code elimination and value numbering are sparse, nearly linear passes. \textbf{Construction.} Compute dominators; place $\phi$-functions at the \emph{dominance frontier} of every definition; rename along the dominator tree. \textbf{Leaving SSA.} Replace each $\phi$ by copies at the end of its predecessors and coalesce. \textbf{Example.} LLVM IR is SSA; local variables start as \texttt{alloca}s and the \texttt{mem2reg} pass promotes them to SSA values (Chapter~\ref{ch:llvm}).
+\end{exbox}
+\begin{exbox}[``What happens between \texttt{gcc hello.c} and the program printing?'']
+(1) \textbf{Preprocess}: includes and macros expanded. (2) \textbf{Compile}: lexing, parsing, semantic analysis, IR, optimisation, code generation to assembly. (3) \textbf{Assemble}: assembly to a relocatable object file with symbols and relocations. (4) \textbf{Link}: resolve symbols against libc (static) or record dynamic dependencies, assign addresses, apply relocations, write an ELF executable. (5) \textbf{Load}: the kernel maps the segments and the dynamic linker maps shared libraries and fixes up the GOT/PLT. (6) \texttt{\_start} runs the C runtime start-up, which calls \texttt{main}; on return \texttt{exit} flushes stdio buffers. Each stage can be inspected with \texttt{-E}, \texttt{-S}, \texttt{-c}, \texttt{objdump -d}, \texttt{readelf}, \texttt{ldd} (Chapter~\ref{ch:front}).
+\end{exbox}
+\begin{exbox}[``Explain virtual memory.'']
+Each process sees a private, contiguous \emph{virtual} address space divided into pages. The MMU translates virtual page numbers to physical frames through (multi-level) page tables, cached in the TLB. An access to a page without a valid mapping raises a \emph{page fault}; the OS allocates or loads the page (from disk or the file), updates the table and restarts the instruction. Benefits: isolation, sharing, demand paging, an address space larger than RAM and simple relocation. Costs: TLB misses, page-fault latency, page-table memory. Replacement policies (LRU approximations such as clock) choose victims; \emph{thrashing} occurs when the working set exceeds the frames. For 32-bit addresses with 4~KB pages the offset is 12 bits and the page number 20 (Chapter~\ref{ch:cs}).
+\end{exbox}
+\begin{exbox}[``How would you check that an optimisation pass is correct?'']
+(1) \textbf{Unit tests} on small IR inputs with exact expected output (FileCheck, Chapter~\ref{ch:filecheck}). (2) \textbf{Differential testing}: compile many generated, UB-free programs with and without the pass and compare behaviour. (3) \textbf{Metamorphic and EMI variants}, so that no reference output is needed. (4) \textbf{Translation validation} of individual transformations (Alive2) where the IR is small enough. (5) \textbf{Sanitizer and verifier builds} so that invalid IR and UB in the tests are caught early. (6) When something fails: reduce, bisect to the pass (\texttt{-opt-bisect-limit}) and the commit, deduplicate, file with the reproducer (Chapter~\ref{ch:verif}).
+\end{exbox}
+
+\section{Project stories \prio{3}}
+Reports describe interviews that start with \emph{your} projects (S5, and the Pune and Austin reports of Chapter~\ref{ch:intel}). Prepare one story per project in 90 seconds with this shape:
+\begin{enumerate}[nosep]
+\item \textbf{Problem and why it mattered} (one sentence).
+\item \textbf{Your part}: what \emph{you} designed, wrote or debugged (``we'' hides what you did).
+\item \textbf{One technical decision}: the alternatives, what you chose and why.
+\item \textbf{A result with a number} (speed-up, bugs found, tests passing, lines removed).
+\item \textbf{What you would change} (shows judgement), and be ready for ``why?'' three times in a row on any detail.
+\end{enumerate}
+\begin{trapbox}[Be honest about what is yours]
+The three stories below are \emph{fall-backs for candidates with no compiler or verification project}: the labs of Chapters~\ref{ch:sem}, \ref{ch:cuda} and \ref{ch:lab} are small enough to re-implement or extend in a day, and you may describe the result as an exercise you built \emph{if you actually built it}. Never present the book's code as research, and never claim a number you did not measure: interviewers ask for the code and the failure case.
+\end{trapbox}
+\begin{exbox}[Story 1: a miniature compiler (Chapter~\ref{ch:sem})]
+\textbf{Problem:} understand the whole pipeline once. \textbf{Built:} lexer, recursive-descent parser, AST, three-address code, a local optimiser (folding, propagation, algebraic simplification, dead-code elimination, copy coalescing) and a small virtual machine, about 250 lines of Python. \textbf{Decision:} keep a \emph{tree-walking interpreter} as an independent second implementation: it is the oracle for differential tests. \textbf{Result:} the five-statement program of question~T13 in the mock OA shrinks from 9 three-address instructions to a single \texttt{print n}. \textbf{Would change:} a real register allocator and a control-flow graph with SSA instead of local-only optimisation.
+\end{exbox}
+\begin{exbox}[Story 2: a verification framework for that compiler (Chapter~\ref{ch:lab})]
+\textbf{Problem:} how do you know a compiler test generator is any good? \textbf{Built:} a random program generator (UB-free by construction, because the Tiny language defines every operation: integer arithmetic is defined and division by zero is a defined trap, so any disagreement is a real bug), a differential tester against the reference interpreter, metamorphic variants, an automatic reducer, a mini FileCheck and a mini \texttt{lit} with timeouts and retries, and eight \emph{seeded compiler bugs} to measure the tester (mutation testing). \textbf{Decision:} generation policies (re-use of sub-expressions, idiom injection) instead of more of the same random programs. \textbf{Result (from the run in this book):} the plain generator finds 5 of the 8 seeded bugs in 300 programs each, the policies find 8 of 8, metamorphic testing alone finds 6; the reducer shrinks failing programs of 571--1\,983 characters to reproducers of 9--65 characters. \textbf{Would change:} coverage-guided feedback and a persistent corpus.
+\end{exbox}
+\begin{exbox}[Story 3: CUDA kernels tested without a GPU (Chapters~\ref{ch:ptx}, \ref{ch:cuda}, \ref{ch:par})]
+\textbf{Problem:} kernels must be tested where no GPU is available. \textbf{Built:} one header that makes a \texttt{.cu} file compile to PTX with Clang \emph{and} run on the CPU with g++ (each CUDA thread a \texttt{std::thread}, \texttt{\_\_syncthreads} a \texttt{std::barrier}), six classic kernels (grid-stride vector add, warp-shuffle reduction, tiled matrix multiply, padded transpose, privatised histogram, scan) with CPU references, and ThreadSanitizer to catch a missing barrier. \textbf{Decision:} emulate synchronisation faithfully (exited threads must not block a barrier) so that a race in the emulator is a race in the kernel. \textbf{Limit you should state yourself:} the emulator checks algorithms and synchronisation, not bank conflicts, warp scheduling or floating-point contraction. \textbf{Would change:} compare the PTX of the same kernels across compiler versions as a regression test.
+\end{exbox}
+
+
+% ===== 23b-flashcards.tex.in =====
+\section{Technical flashcards \prio{2}}\label{sec:cards}
+110 cards. Method: cover the right column, answer \emph{aloud} in one or two sentences, uncover, mark the miss. Cards you miss twice go into the error log of Chapter~\ref{ch:qbank}. Every card is a compression of a section of this book; the chapter reference is in the answer when the topic needs depth.
+\subsection{C and C++}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{4.6cm}Y@{}}
+\toprule
+\textbf{Question} & \textbf{Answer (cover, say it aloud, compare)}\\
+\midrule\endhead
+What is undefined behaviour, and why does it matter to a compiler engineer? & The standard places no requirement on the program, so the optimiser may \emph{assume} it never happens (signed overflow, null dereference, out-of-bounds access, data race) and the generated code can change with \texttt{-O} level. A compiler test generator must therefore be UB-free (Chapter~\ref{ch:verif}).\\
+Undefined, unspecified, implementation-defined? & Undefined: no requirements at all. Unspecified: several outcomes allowed, none documented (order of evaluation of arguments). Implementation-defined: the compiler documents its choice (\texttt{sizeof(int)}, signedness of \texttt{char}, right shift of negative numbers).\\
+Signed versus unsigned overflow? & Unsigned arithmetic wraps modulo $2^n$ (defined). Signed overflow is undefined, so \texttt{x + 1 > x} may be folded to true.\\
+What does \texttt{sizeof} give for an array and for an array parameter? & The whole array in the scope that declares it; a parameter written \texttt{int a[10]} is really \texttt{int *a}, so \texttt{sizeof a} is the pointer size (8 on LP64).\\
+\texttt{const int *p}, \texttt{int *const p}, \texttt{const int *const p}? & Read right to left: pointer to const int (pointee read-only), const pointer to int (pointer fixed), const pointer to const int.\\
+Where do globals, \texttt{static} locals, string literals, locals and \texttt{malloc}ed memory live? & Data/BSS segments (initialised/zero-initialised globals and statics), read-only data (literals), the stack (locals, return addresses), the heap (\texttt{malloc}/\texttt{new}).\\
+\texttt{malloc}, \texttt{calloc}, \texttt{realloc}: differences and bugs? & \texttt{malloc} leaves memory uninitialised; \texttt{calloc} zeroes it and checks the product for overflow; \texttt{realloc} may move the block (assign to a temporary first, else a failure leaks the old one). Bugs: leak, double free, use after free, freeing a non-heap pointer, forgetting the $+1$ for the terminator.\\
+\texttt{memcpy} versus \texttt{memmove}? & \texttt{memcpy} requires non-overlapping ranges (undefined otherwise); \texttt{memmove} handles overlap, copying backwards when the destination lies after the source.\\
+What does \texttt{volatile} do, and not do? & It forbids the compiler from caching or removing accesses (memory-mapped I/O, signal handlers). It is \emph{not} atomic and gives no ordering between threads: use \texttt{std::atomic}.\\
+What is \texttt{restrict}? & A C promise that during the pointer's lifetime the object is accessed only through it, which lets the compiler assume no aliasing (vectorisation, reordering); breaking the promise is undefined.\\
+Struct padding: size of \texttt{struct\{char a; int b; char c;\}}, and how to shrink it? & 12 bytes on LP64 (3 bytes of padding after \texttt{a}, 3 after \texttt{c}); order members by decreasing alignment (8 bytes) or pack at the price of unaligned accesses.\\
+How do you detect endianness? & Store a known \texttt{uint32\_t} and inspect its first byte through an \texttt{unsigned char *} (or \texttt{memcpy}); x86-64 and ARM Linux are little-endian, network byte order is big-endian (\texttt{htonl}).\\
+How does a virtual call work and what does it cost? & Each polymorphic object holds a hidden \texttt{vptr} to its class's vtable; the call loads the function pointer and calls indirectly: one extra load and no inlining unless the compiler can devirtualise.\\
+Why does a polymorphic base class need a virtual destructor? & Deleting a derived object through a base pointer without one is undefined (the derived destructor does not run).\\
+In which order are objects constructed and destroyed? & Base classes first, then members in \emph{declaration} order (not the order of the initialiser list), then the constructor body; destruction in exactly the reverse order.\\
+Rule of 0/3/5? Why \texttt{noexcept} moves? & A class that owns a resource needs destructor, copy constructor and copy assignment (3), plus move constructor and move assignment (5); best is to own resources through members that manage themselves (0). \texttt{std::vector} moves elements on reallocation only if the move cannot throw.\\
+\texttt{unique\_ptr}, \texttt{shared\_ptr}, \texttt{weak\_ptr}? & Sole ownership (movable, no overhead); shared ownership by reference counting (atomic counter; cycles leak); non-owning observer that breaks cycles.\\
+The four C++ casts? & \texttt{static\_cast} (compile-time-checked conversions), \texttt{dynamic\_cast} (checked downcast using RTTI), \texttt{const\_cast} (add or remove const), \texttt{reinterpret\_cast} (bit-level reinterpretation; using the result as another type is usually undefined).\\
+Which operations invalidate iterators of \texttt{vector}, \texttt{deque}, \texttt{list}, \texttt{map}? & \texttt{vector}: insert/erase invalidate at and after the position, a reallocation invalidates everything; \texttt{deque}: insertion at an end invalidates iterators (references stay valid), in the middle everything; \texttt{list} and \texttt{map}: only the erased element.\\
+What is strict aliasing? & Accessing an object through a pointer of an incompatible type is undefined (except through \texttt{char} types), so the compiler may reorder loads and stores across such pointers; type-pun with \texttt{memcpy} (or a union in C).\\
+Integer promotions and mixed comparisons? & Operands narrower than \texttt{int} are converted to \texttt{int} before arithmetic; in a mixed signed/unsigned comparison the signed operand is converted to unsigned, so \texttt{-1 < 1u} is false.\\
+Order of evaluation: \texttt{f(a(), b())} and \texttt{i++ + i++}? & The order of argument evaluation is unspecified; \texttt{i++ + i++} modifies \texttt{i} twice without sequencing: undefined.\\
+\bottomrule
+\end{xltabular}
+\end{center}
+\subsection{Compilers}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{4.6cm}Y@{}}
+\toprule
+\textbf{Question} & \textbf{Answer (cover, say it aloud, compare)}\\
+\midrule\endhead
+Name the phases of a compiler. & Front end (lexing, parsing, semantic analysis, IR generation), middle end (machine-independent optimisation on the IR), back end (instruction selection, scheduling, register allocation, emission); the toolchain adds assembler and linker.\\
+Lexer versus parser; what is maximal munch? & The lexer turns characters into tokens with regular languages (a DFA); the parser builds a tree with a context-free grammar. Maximal munch takes the longest matching token: \texttt{b+++c} is \texttt{b ++ + c}.\\
+Define FIRST and FOLLOW; when is a grammar LL(1)? & FIRST($\alpha$): terminals that can begin a string derived from $\alpha$ (plus $\varepsilon$ if nullable); FOLLOW($A$): terminals that can follow $A$ in a sentential form (\$ at the end). LL(1): for each non-terminal the FIRST sets of its alternatives are disjoint and, if one alternative is nullable, the others' FIRST sets are disjoint from FOLLOW.\\
+Why eliminate left recursion and left-factor? & A top-down parser loops forever on $A\to A\alpha$, and a common prefix needs unbounded lookahead; both transformations give an equivalent LL(1)-friendly grammar.\\
+LL versus LR; SLR, LALR, LR(1)? & LL predicts a production top-down; LR is bottom-up shift--reduce and accepts more grammars. SLR reduces on FOLLOW (weakest), LR(1) carries exact lookaheads (strongest, largest tables), LALR merges LR(1) states with equal cores (the yacc/bison default).\\
+Shift/reduce and reduce/reduce conflicts? & Two actions are possible in one state, usually because of ambiguity (dangling \texttt{else}). yacc shifts by default and prefers the earlier rule for reduce/reduce; the real fix is a grammar rewrite or precedence declarations.\\
+Parse tree, AST, DAG? & Parse tree: every grammar symbol; AST: only the meaningful nodes; DAG: identical subexpressions shared (the basis of local common-subexpression elimination).\\
+Synthesised versus inherited attributes? & Synthesised attributes flow bottom-up from children (the value of an expression); inherited ones flow top-down or sideways (the declared type handed to each identifier of a declaration).\\
+Three-address code, basic block, control-flow graph? & Instructions of the form \texttt{x = y op z}; a basic block is a maximal straight-line sequence with one entry (the leader) and one exit; the CFG has blocks as nodes and possible transfers as edges.\\
+What is SSA and why is it useful? & One assignment per variable and $\phi$-functions at joins. Def--use chains are explicit, so constant propagation, dead-code elimination and value numbering are sparse and fast; built with dominance frontiers.\\
+Dominator, dominance frontier, natural loop? & $d$ dominates $n$ if every path from the entry to $n$ passes $d$; the dominance frontier of $d$ is where its dominance ends ($\phi$s are needed there); a back edge $n\to h$ whose head $h$ dominates $n$ defines a natural loop.\\
+Data-flow analysis: directions and meet? & Reaching definitions: forward, may (union). Available expressions: forward, must (intersection). Live variables: backward, may. Iterate the transfer functions to a fixed point; termination follows from a finite lattice and monotone functions.\\
+Classic scalar optimisations? & Constant folding and propagation, copy propagation, common-subexpression elimination, dead-code elimination, strength reduction, algebraic simplification, partial-redundancy elimination, global value numbering.\\
+Loop optimisations; trade-offs of unrolling? & Invariant code motion, induction-variable strength reduction, unrolling, fusion/fission, interchange, tiling, vectorisation. Unrolling removes branch overhead and exposes parallelism but grows the code and raises register pressure.\\
+Inlining: benefits and costs? & Removes call overhead and lets the body be optimised in context; costs code size, compile time and register pressure; decided by heuristics on size and call-site hotness.\\
+What is alias analysis and why does it matter? & It decides whether two pointers may or must refer to the same memory; precise answers allow reordering, hoisting and vectorisation. Strict aliasing and \texttt{restrict} give the compiler extra facts.\\
+Register allocation by graph colouring? & Build the interference graph of live ranges, repeatedly remove nodes of degree $<k$ onto a stack, pick a spill candidate when stuck, then colour in reverse order; spill if no colour is free; coalesce moves conservatively. Linear scan is the faster, less precise alternative (JITs).\\
+Instruction selection and scheduling? & Selection maps IR trees/DAGs to target instructions (tree-pattern matching, dynamic programming). List scheduling orders instructions respecting dependences (RAW true; WAR and WAW removable by renaming) and latencies.\\
+Calling convention and stack frame? & The ABI fixes which registers carry arguments and results and which are caller- or callee-saved; a frame holds saved registers, locals and spills. System V AMD64: the first six integer arguments in \texttt{rdi, rsi, rdx, rcx, r8, r9}.\\
+Static versus dynamic linking; relocation? & Static linking copies library code into the executable; dynamic linking resolves symbols at load time through the GOT/PLT and shares libraries; relocations patch addresses once the final layout is known.\\
+JIT, AOT, interpreter? & AOT compiles before running (fast start, whole-program optimisation); a JIT compiles at run time with profile information (warm-up cost; for example PTX is JIT-compiled by the driver); an interpreter executes the IR directly (simple, slow).\\
+Peephole optimisation? & Pattern rewriting over a small window of instructions, for example removing \texttt{mov r,r} or replacing \texttt{x*2} by a shift or add.\\
+Why does \texttt{-O2} change a program's behaviour? & The program has undefined behaviour or reads uninitialised data; the optimiser exploits the assumption that this never happens, so the observable result differs between levels.\\
+What is a target triple? & \texttt{arch-vendor-os(-environment)}, for example \texttt{x86\_64-unknown-linux-gnu} or \texttt{nvptx64-nvidia-cuda}: it selects the back end, ABI and runtime.\\
+Compiler bug or program bug: how do you decide? & Check the program with sanitizers (UBSan, ASan, MSan), compile at several levels and with several compilers, reduce the test; if all references agree except one and the program is UB-free, suspect the compiler.\\
+\bottomrule
+\end{xltabular}
+\end{center}
+\subsection{LLVM, PTX and CUDA}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{4.6cm}Y@{}}
+\toprule
+\textbf{Question} & \textbf{Answer (cover, say it aloud, compare)}\\
+\midrule\endhead
+LLVM IR in one sentence? & A typed, SSA, low-level, target-independent IR with unlimited virtual registers, stored as text (\texttt{.ll}), bitcode (\texttt{.bc}) or in memory; front ends emit it, passes transform it, back ends lower it.\\
+Which tools do you use? & \texttt{clang -S -emit-llvm} (source to IR), \texttt{opt} (run passes), \texttt{llc} (IR to assembly), \texttt{llvm-as/llvm-dis}, \texttt{llvm-reduce} (shrink a failing IR), \texttt{FileCheck} and \texttt{lit} (tests).\\
+\texttt{getelementptr} and \texttt{inbounds}? & GEP only \emph{computes an address}, it never accesses memory. With \texttt{inbounds} an out-of-bounds result is poison, which licenses alias and range reasoning.\\
+\texttt{undef}, \texttt{poison}, \texttt{freeze}? & \texttt{undef}: an unspecified value (each use may differ). \texttt{poison}: deferred undefined behaviour that taints dependent computations and becomes UB when it reaches a side effect. \texttt{freeze} turns either into an arbitrary but fixed value.\\
+What do \texttt{nsw} and \texttt{nuw} mean? & No signed/unsigned wrap: an overflowing \texttt{add nsw} yields poison. Passes may therefore assume no overflow (loop analysis, strength reduction).\\
+Analysis pass versus transformation pass? & An analysis computes facts (dominators, alias information), a transformation rewrites IR using them; \texttt{opt -passes='mem2reg,instcombine' in.ll -S}; \texttt{-O2} is a pipeline of such passes.\\
+FileCheck directives? & \texttt{CHECK} (match in order), \texttt{CHECK-NEXT} (the next line), \texttt{CHECK-NOT}, \texttt{CHECK-DAG} (any order), \texttt{CHECK-LABEL} (anchor); regexes in \texttt{\{\{...\}\}} and variables \texttt{[[VAR:...]]}.\\
+What does \texttt{lit} do? & LLVM's test runner: each test file carries \texttt{RUN:} lines with substitutions (\texttt{\%s}, \texttt{\%t}); results PASS, FAIL, XFAIL, UNSUPPORTED; \texttt{REQUIRES:}, \texttt{not}, parallel execution and timeouts.\\
+How are NVVM IR, PTX and SASS related? & CUDA C++ is compiled to NVVM IR (an LLVM dialect with GPU metadata) $\to$ NVPTX back end / libNVVM $\to$ PTX (a virtual ISA) $\to$ \texttt{ptxas} $\to$ SASS, the real machine code of one GPU generation.\\
+Why does PTX exist? & It is a stable virtual ISA: a binary can carry PTX and be JIT-compiled by the driver for GPUs that did not exist at build time; SASS is generation-specific and not documented as an ISA.\\
+What does \texttt{nvcc} do? & It separates host and device code, compiles device code to PTX and (with \texttt{ptxas}) SASS, embeds the result in a fat binary and compiles the host code with the host compiler; \texttt{-arch}/\texttt{-gencode} choose which virtual and real architectures are embedded.\\
+What do you see in a vecadd PTX file? & Typed virtual registers (\texttt{.reg .f32 \%f1}), state spaces (\texttt{.global}, \texttt{.shared}, \texttt{.param}), special registers (\texttt{\%tid.x}, \texttt{\%ctaid.x}, \texttt{\%ntid.x}), \texttt{ld.global}/\texttt{st.global}, \texttt{mad.lo}, predicated branches (\texttt{@\%p bra}).\\
+What is a warp; what is divergence? & 32 threads executed together (SIMT). When threads of a warp take different branches the paths are serialised with masking, wasting lanes. From Volta on threads schedule independently, so warp-level assumptions need \texttt{\_\_syncwarp}.\\
+The CUDA memory spaces? & Registers (fastest), shared memory (on-chip, 32 banks, programmer-managed), L1/L2 caches, global memory (off-chip, high latency), constant memory (cached broadcast), local memory (spilled registers, off-chip).\\
+Coalescing and bank conflicts? & A warp's consecutive 4-byte loads merge into few memory transactions (coalesced); strided access wastes bandwidth. In shared memory two threads hitting the same bank at different addresses serialise: pad (\texttt{[32][33]}) to avoid it.\\
+What is occupancy? & Resident warps per SM relative to the maximum; limited by registers per thread, shared memory per block and block size. High occupancy hides latency but is not always faster (more registers per thread may be better than none spilled).\\
+Rules for \texttt{\_\_syncthreads()}? & A barrier for all threads of a block plus visibility of their shared/global writes within the block; every thread must reach it, so a barrier in divergent code deadlocks or is undefined.\\
+Races and memory ordering on GPUs? & Races on shared or global memory are undefined; \texttt{compute-sanitizer --tool racecheck} finds shared-memory races; \texttt{\_\_threadfence()} orders global writes device-wide, atomics provide read-modify-write; the CUDA memory model is scoped (block, device, system).\\
+Why are GPU compilers hard to verify? & FMA contraction and fast-math change floating-point results; divergence and reconvergence semantics; a hardware ISA that is not public; a large matrix of architectures and driver versions; nondeterminism from atomics and scheduling.\\
+How would you test a GPU compiler? & In layers: IR and PTX unit tests (FileCheck), differential tests of random kernels against a CPU model or another compiler, metamorphic variants, execution tests with tolerance policies, sanitizer builds, reduced reproducers, nightly bisection (Chapter~\ref{ch:verif}).\\
+\bottomrule
+\end{xltabular}
+\end{center}
+\subsection{Parallel programming and verification methodology}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{4.6cm}Y@{}}
+\toprule
+\textbf{Question} & \textbf{Answer (cover, say it aloud, compare)}\\
+\midrule\endhead
+What is a data race? & Two threads access the same location, at least one writes, and nothing orders them (no happens-before): undefined behaviour in C and C++.\\
+Mutex, atomic, condition variable? & A mutex gives mutual exclusion for a critical section; an atomic gives indivisible operations on one variable with a chosen memory order; a condition variable lets a thread sleep until a predicate holds (always wait in a loop or with a predicate: wake-ups can be spurious).\\
+C++ memory orders? & \texttt{relaxed}: atomicity only. \texttt{release}/\texttt{acquire}: a release store publishes earlier writes to the thread whose acquire load reads it. \texttt{seq\_cst}: one global order of all such operations (the default).\\
+What is false sharing? & Independent variables on one cache line make cores ping-pong the line; pad or align to 64 bytes (\texttt{alignas(64)}).\\
+Deadlock: conditions and avoidance? & Mutual exclusion, hold and wait, no preemption, circular wait. Break one: a global lock order, \texttt{std::scoped\_lock} for several mutexes, try-lock with back-off.\\
+OpenMP essentials? & \texttt{\#pragma omp parallel for reduction(+:s)}; data-sharing clauses \texttt{private}, \texttt{shared}, \texttt{firstprivate}; scheduling \texttt{static} or \texttt{dynamic}; a reduction removes the race on the accumulator.\\
+Amdahl versus Gustafson? & Amdahl: fixed problem size, speed-up $\le1/\big(s+(1-s)/p\big)$ for serial fraction $s$. Gustafson: scale the problem with $p$, scaled speed-up $p-s(p-1)$.\\
+The Python GIL? & CPython runs bytecode in one thread at a time per interpreter: threads help with I/O-bound work, CPU-bound work needs processes or native extensions (a free-threaded build exists in recent versions).\\
+What is the oracle problem? & To judge a compiler's output you need to know the correct result; for random programs there is no reference, so use differential testing, metamorphic relations, self-checking programs or run-time invariants.\\
+Differential testing? & Run one program through several compilers or flags (or an interpreter) and compare the observable behaviour; a disagreement flags a bug in one of them once undefined behaviour is excluded.\\
+Metamorphic testing and EMI? & Apply a transformation that must preserve behaviour (EMI: delete code that is not executed for the given input) and compare the two results; no oracle is needed.\\
+Why must generated programs be UB-free? & Otherwise a disagreement may be legitimate. Csmith avoids UB by construction (safe-math wrappers, pointer analysis); YARPGen by tracking value ranges during generation.\\
+Delta debugging, C-Reduce, \texttt{llvm-reduce}? & Shrink a failing input automatically while an ``interestingness'' test still holds: ddmin removes chunks, C-Reduce adds language-aware transformations, \texttt{llvm-reduce} works on IR. The test must also reject reductions that introduce UB.\\
+\texttt{git bisect run}: the exit codes? & 0: good; 1--127 except 125: bad; 125: skip this commit; 128 and above: abort the bisection.\\
+Pass bisection? & \texttt{-opt-bisect-limit=N} runs only the first $N$ optimisation passes; binary-search $N$ to find the pass that turns a good result bad.\\
+Coverage-guided fuzzing versus generative testing? & libFuzzer and AFL mutate inputs guided by coverage (good for parsers and crashes); generators produce valid, typed programs that reach deep into the optimiser.\\
+Mutation testing? & Seed small bugs into the system and check that the tests notice; the fraction killed estimates the strength of the suite (Chapter~\ref{ch:lab}: 5 of 8 with a naive generator, 8 of 8 with idiom policies).\\
+What do the sanitizers find? & ASan: buffer overflows and use after free; UBSan: signed overflow, bad shifts, misaligned or null accesses; MSan: reads of uninitialised memory (Clang); TSan: data races.\\
+Translation validation and formal verification? & Alive2 checks each optimisation instance with an SMT solver; CompCert is a C compiler proved correct in Coq; both complement testing, which covers what is not proved.\\
+A flaky test: what is your policy? & Detect by re-running, quarantine with an owner and a ticket, never retry silently forever, fix the root cause (timing, shared state, unseeded randomness).\\
+Triage and deduplication? & Group failures by crash signature (top frames, assertion text), reduce one representative per signature, attach compiler version, flags and seed.\\
+What belongs in a good compiler bug report? & A minimal reproducer, exact command line and versions, expected versus actual behaviour, how it was reduced, whether it is a regression (good and bad commits), and the UB/sanitizer check.\\
+ISO 26262 and compilers? & A compiler is a software tool: its required confidence depends on how likely it is to inject or miss errors and how likely you are to detect them; qualification may need validation suites and extra testing (Chapter~\ref{ch:verif}).\\
+\bottomrule
+\end{xltabular}
+\end{center}
+\subsection{Operating systems, architecture, databases, networks, ML and Python}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{4.6cm}Y@{}}
+\toprule
+\textbf{Question} & \textbf{Answer (cover, say it aloud, compare)}\\
+\midrule\endhead
+Process versus thread; what is in a context switch? & A process has its own address space; threads of one process share it. A context switch saves and restores registers (and the address-space pointer, with possible TLB effects).\\
+Virtual memory, page table, TLB, page fault? & Pages map to frames through multi-level page tables, cached by the TLB; a missing mapping causes a page fault that the OS resolves before restarting the instruction. 32-bit addresses with 4~KB pages: 12 offset bits, 20 page-number bits.\\
+Name the scheduling algorithms and one weakness each. & FCFS (convoy effect), SJF/SRTF (optimal average wait, starvation, needs burst estimates), round robin (quantum trade-off), priority (starvation, fixed by ageing), multilevel feedback (approximates SJF).\\
+Four conditions for deadlock; the Banker's algorithm? & Mutual exclusion, hold and wait, no preemption, circular wait. The Banker's algorithm grants a request only if a safe sequence still exists.\\
+Cache: tag/index/offset, AMAT, miss types? & Address $=$ tag $|$ index $|$ offset; sets $=$ size/(block$\times$ways); AMAT $=$ hit time $+$ miss rate $\times$ miss penalty; misses are compulsory, capacity or conflict.\\
+Pipeline hazards and forwarding? & Structural, data (RAW) and control hazards; forwarding passes ALU results to the next instruction early; a load followed by its use still costs one stall.\\
+IEEE-754 binary32 layout and pitfalls? & 1 sign, 8 exponent (bias 127), 23 fraction bits; subnormals fill the gap at zero; NaN $\ne$ NaN; addition is not associative; \texttt{0.1+0.2!=0.3} in binary64.\\
+TCP versus UDP; the handshake? & TCP: connection-oriented, reliable ordered byte stream, flow and congestion control, SYN--SYN/ACK--ACK. UDP: independent datagrams, no guarantees.\\
+ACID and isolation levels? & Atomicity, consistency, isolation, durability. Read uncommitted $\to$ read committed $\to$ repeatable read $\to$ serialisable remove dirty reads, non-repeatable reads and phantoms in turn.\\
+Bias--variance and the fixes for overfitting? & High bias underfits, high variance overfits. Fixes: more data, regularisation (L2/L1), early stopping, simpler model, dropout, cross-validation to choose.\\
+Precision, recall, F1, AUC? & Precision $=TP/(TP+FP)$, recall $=TP/(TP+FN)$, $F_1$ their harmonic mean; AUC is the probability that a random positive scores above a random negative. Accuracy misleads on imbalanced data.\\
+Gradient descent and the learning rate? & Step against the gradient; on a quadratic with largest curvature $\lambda_{max}$ it converges only if $\eta<2/\lambda_{max}$; too large diverges, too small crawls.\\
+Backpropagation in four sentences? & Run the network forward and cache activations; compute the loss; apply the chain rule backwards, layer by layer, to get $\partial L/\partial W$ for every weight (reverse-mode differentiation, which is why it is cheap: one backward pass for all gradients); update the weights.\\
+Why subtract the maximum in softmax? & \texttt{exp} overflows for large logits; subtracting the maximum leaves the result unchanged and keeps all exponents $\le0$.\\
+\texttt{fp16} versus \texttt{bf16}? & fp16: 5 exponent and 10 fraction bits (small range, finer precision, loss scaling needed); bf16: 8 exponent and 7 fraction bits (the range of fp32, coarser precision).\\
+What do ML compilers do? & Fuse operators (avoid memory round trips), choose layouts and tiling, and generate kernels (Triton, XLA, TorchInductor); the graph level is above the LLVM/PTX level.\\
+Python: mutable default arguments and late-binding closures? & Defaults are evaluated once, so a default list is shared between calls; closures capture the variable, not its value (\texttt{lambda i=i: i} fixes it).\\
+Python: \texttt{is} versus \texttt{==}; copies? & \texttt{is} compares identity, \texttt{==} compares value; \texttt{copy.copy} is shallow, \texttt{copy.deepcopy} copies nested objects recursively.\\
+Python: costs of list, dict, set, deque? & List: append amortised $O(1)$, insert at the front $O(n)$; dict and set: average $O(1)$ lookup and insertion; \texttt{collections.deque}: $O(1)$ at both ends.\\
+Python for tool automation? & \texttt{subprocess.run([...], capture\_output=True, text=True, timeout=...)}, \texttt{argparse}, \texttt{pathlib}, \texttt{concurrent.futures} (processes for CPU-bound work), \texttt{pytest}; never \texttt{shell=True} with untrusted strings.\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+\section{Behavioural and HR questions \prio{2}}
+Use \textbf{STAR} (Situation, Task, Action, Result) with one number in the result. Never invent an experience: a short true story beats a long polished one, and interviewers probe the details.
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{3.7cm}L{3.0cm}Y@{}}
+\toprule
+\textbf{Question} & \textbf{What it tests} & \textbf{Answer skeleton}\\
+\midrule\endhead
+Tell me about yourself. & clarity, fit & 60--90 seconds: present (final year, what you study, what you like: compilers, systems, GPUs), past (two projects, one number each), future (why this role). No life story.\\
+Why compilers? Why this team? & motivation, homework & Be specific to the posting: compilers sit between software and hardware and a miscompilation affects every program; \emph{verification} is about establishing correctness at scale (differential testing, reduction, automation); the team builds infrastructure for GPU and embedded compilers. Add one thing you did that proves the interest.\\
+Describe a hard bug you debugged. & method & Reproduce $\to$ minimise $\to$ hypothesise $\to$ bisect or instrument $\to$ fix $\to$ regression test; name the tools (debugger, sanitizer, \texttt{git bisect}). Say what you learned (for example ``check UB first'').\\
+A disagreement with a teammate. & collaboration & Situation and the two positions $\to$ you gathered data or ran an experiment $\to$ decision and its result. Show that you disagreed with the idea, not the person.\\
+A mistake or failure. & ownership & Real, small-to-medium, your own decision $\to$ what you did when you noticed $\to$ what changed in your habits (a test, a checklist).\\
+How do you learn something new fast? & self-direction & A loop: minimal example $\to$ read the reference $\to$ break it on purpose $\to$ write down the rule. Give one real example (this preparation is one: you compiled every snippet).\\
+How do you handle a tight deadline? & prioritisation & Clarify must-have versus nice-to-have, deliver a working version first, communicate early about risk.\\
+Strengths and weaknesses? & self-awareness & Strength with evidence; a real weakness with the habit you use to manage it (not ``perfectionism'').\\
+Where do you see yourself in 3--5 years? & ambition, fit & Deepening technical skill in compilers or systems, owning a component, mentoring; avoid naming a title.\\
+Questions about relocation, joining date, stipend. & logistics & The notice gives the stipend (INR 100\,000 per month) and the locations (Pune and Bengaluru); be factual, say what is flexible, and ask HR about conversion to a full-time offer.\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+\section{Questions to ask the interviewer \prio{2}}
+Prepare three; asking none reads as disinterest. Good ones show that you understand the work:
+\begin{enumerate}[nosep]
+\item What does a typical week look like for an intern on this team: writing tests, building infrastructure, triaging failures?
+\item Which parts of the toolchain does verification cover (front end, optimiser, back end, runtime), and for which hardware?
+\item How are failures triaged and deduplicated, and how large is the nightly regression infrastructure?
+\item How does the team handle flaky tests and limited hardware availability?
+\item Do you use random program generation, fuzzing or formal tools, and how are generated programs kept free of undefined behaviour?
+\item What would a successful internship look like at the end of the term?
+\item What is the path from the internship to a full-time role?
+\item What do you wish interns knew on their first day?
+\end{enumerate}
+
+\section{Interview-day checklist \prio{2}}
+\begin{itemize}[label=$\square$]
+\item Invitation re-read: time zone, platform (video link, shared editor), whether you may use an IDE, whether the round is coding or verbal.
+\item Two project stories at 90 seconds each, rehearsed aloud once; one \emph{failure} story.
+\item A pen and paper for diagrams (control-flow graphs, dependence graphs, memory layouts are easier to draw than to say).
+\item A working environment: charged laptop, tested camera and microphone, a quiet room, water.
+\item After each round: write down the questions you were asked the same day (they are the best preparation for the next round, and for the next candidate).
+\end{itemize}
+
+
+% ===== 90a-top40.tex.in =====
+\appendix
+\chapter{The Top-40 Card: Your Last Twenty Minutes}
+\label{app:top40}
+
+\begin{chapbox}
+Read this once, slowly, and then stop studying. Every line is a compression of a chapter; the chapter has the proof. If a line surprises you, mark it and read that chapter's box tomorrow, not now.
+\end{chapbox}
+\section*{C and C++}
+\begin{enumerate}[nosep,leftmargin=2.2em,start=1,label=\textbf{\arabic*.}]
+\item \textbf{Undefined behaviour:} signed overflow, out-of-bounds access, null dereference, uninitialised read, data race. The optimiser \emph{assumes} it never happens; unsigned arithmetic wraps.
+\item \textbf{Sizes (LP64):} \texttt{char} 1, \texttt{int} 4, \texttt{long} and pointers 8. Arrays decay to pointers (\texttt{sizeof} of an array \emph{parameter} is 8); structs have padding (\texttt{char,int,char} is 12).
+\item \textbf{Conversions:} integer promotion to \texttt{int}; mixed signed/unsigned compares as unsigned (\texttt{-1 < 1u} is false); \texttt{char} signedness is implementation-defined.
+\item \textbf{Macros are text:} \texttt{SQ(2+3)} with \texttt{x*x} is 11. \texttt{i++ + i++} is undefined; the order of argument evaluation is unspecified; \texttt{\&\&} and \texttt{||} short-circuit.
+\item \textbf{Memory:} \texttt{memcpy} forbids overlap, \texttt{memmove} allows it; assign \texttt{realloc} to a temporary; \texttt{calloc} zeroes; one \texttt{free} per \texttt{malloc}; never use after free.
+\item \textbf{Objects:} bases construct first, then members in \emph{declaration} order, then the body; destruction in reverse. Virtual calls use the vtable but \emph{default arguments are static}; a polymorphic base needs a virtual destructor.
+\item \textbf{Ownership:} rule of 0/3/5, RAII, \texttt{unique\_ptr} (sole owner), \texttt{shared\_ptr} (counted; cycles leak, use \texttt{weak\_ptr}), moves \texttt{noexcept}.
+\item \textbf{Iterators:} a \texttt{vector} reallocation invalidates all of them; \texttt{list} and \texttt{map} only the erased element.
+\item \textbf{Aliasing:} accessing an object through an incompatible pointer type is undefined (type-pun with \texttt{memcpy}); \texttt{volatile} is not atomic; \texttt{restrict} is a promise the compiler trusts.
+\end{enumerate}
+\section*{Compilers}
+\begin{enumerate}[nosep,leftmargin=2.2em,start=10,label=\textbf{\arabic*.}]
+\item \textbf{Pipeline:} lex $\to$ parse $\to$ semantic analysis $\to$ IR $\to$ optimise $\to$ select, schedule, allocate registers $\to$ assemble $\to$ link $\to$ load. Lexers are regular, parsers context-free; maximal munch makes \texttt{b+++c} equal \texttt{b++ + c}.
+\item \textbf{FIRST/FOLLOW:} FOLLOW($A$) comes from what follows $A$ in productions; a nullable tail passes FOLLOW of the left-hand side. LL(1): FIRST sets of alternatives disjoint (and disjoint from FOLLOW if nullable); left recursion must go.
+\item \textbf{LR family:} LR(0) $\subset$ SLR $\subset$ LALR $\subset$ LR(1); yacc and bison use LALR(1); a shift/reduce conflict (dangling \texttt{else}) is resolved by shifting.
+\item \textbf{Basic block:} from a leader to the next; leaders are the first instruction, jump targets and instructions after jumps. The CFG connects blocks.
+\item \textbf{SSA:} one definition per name, $\phi$ at joins placed on dominance frontiers; def--use chains become explicit.
+\item \textbf{Data-flow:} reaching definitions (forward, union), available expressions (forward, intersection), liveness (backward, union); iterate to a fixed point on a finite lattice.
+\item \textbf{Loops:} invariant code motion, strength reduction, unrolling (fewer branches, bigger code, more registers), interchange (stride-1 inner loop), tiling, vectorisation.
+\item \textbf{Register allocation} is graph colouring with $k$ colours (simplify, spill, select); linear scan for JITs; spills cost loads and stores.
+\item \textbf{Inlining and alias analysis} unlock other optimisations; UB-exploiting optimisations change behaviour between \texttt{-O} levels.
+\item \textbf{ABI and linking:} System V AMD64 passes the first six integer arguments in \texttt{rdi, rsi, rdx, rcx, r8, r9}; static linking copies code, dynamic linking resolves through GOT/PLT; relocations patch addresses.
+\end{enumerate}
+\section*{LLVM, PTX, CUDA}
+\begin{enumerate}[nosep,leftmargin=2.2em,start=20,label=\textbf{\arabic*.}]
+\item \textbf{LLVM IR:} typed SSA; \texttt{alloca} + \texttt{mem2reg}; \texttt{getelementptr} only computes an address and an \texttt{inbounds} violation is poison; \texttt{undef}, \texttt{poison}, \texttt{freeze}; \texttt{nsw}/\texttt{nuw}.
+\item \textbf{Tools:} \texttt{clang -S -emit-llvm}, \texttt{opt -passes=...}, \texttt{llc}, \texttt{llvm-reduce}; FileCheck \texttt{CHECK}, \texttt{-NEXT}, \texttt{-NOT}, \texttt{-DAG}, \texttt{-LABEL}; \texttt{lit} runs \texttt{RUN:} lines.
+\item \textbf{NVIDIA stack:} CUDA C++ $\to$ NVVM IR $\to$ NVPTX $\to$ PTX (virtual ISA) $\to$ \texttt{ptxas} $\to$ SASS (real machine code); the driver can JIT PTX.
+\item \textbf{Warps:} 32 threads in lock-step; divergence serialises; every thread of a block must reach \texttt{\_\_syncthreads()}; since Volta threads schedule independently (\texttt{\_\_syncwarp}).
+\item \textbf{Memory:} coalesced global accesses (consecutive threads, consecutive addresses); shared memory has 32 banks (pad \texttt{[32][33]}); occupancy is limited by registers, shared memory and block size and higher is not always faster.
+\item \textbf{Races} are undefined: \texttt{compute-sanitizer --tool racecheck}; \texttt{\_\_threadfence}, atomics, a scoped memory model.
+\item \textbf{Floating point:} FMA contraction and fast-math change results, so GPU tests need tolerance policies; \texttt{0.1+0.2!=0.3}; addition is not associative; binary32 is 1+8+23 bits.
+\end{enumerate}
+\section*{Verification}
+\begin{enumerate}[nosep,leftmargin=2.2em,start=27,label=\textbf{\arabic*.}]
+\item \textbf{Oracle problem} $\to$ differential testing, metamorphic/EMI variants, self-checking programs; generated programs must be UB-free (Csmith, YARPGen).
+\item \textbf{Reduction} with an interestingness test that also rejects UB (ddmin, C-Reduce, \texttt{llvm-reduce}); \texttt{git bisect run}: exit 0 good, 1--127 bad, 125 skip, $\ge128$ abort; \texttt{-opt-bisect-limit=N} finds the pass.
+\item \textbf{Fuzzing} (coverage-guided: libFuzzer, AFL) versus generators; sanitizers: ASan (memory), UBSan (undefined arithmetic), MSan (uninitialised), TSan (races).
+\item \textbf{Mutation testing} measures the tests: seed bugs, count kills (the lab: 5 of 8 with a naive generator, 8 of 8 with idiom policies).
+\item \textbf{Triage:} re-run to find flaky tests, quarantine with an owner, dedupe by crash signature; a bug report is a minimal reproducer, the exact command, versions and the UB check.
+\item \textbf{Proof and standards:} Alive2 validates single optimisations with an SMT solver, CompCert is proved correct, testing covers the rest; ISO 26262 asks how much confidence a tool like a compiler needs.
+\end{enumerate}
+\section*{Systems, ML, Python}
+\begin{enumerate}[nosep,leftmargin=2.2em,start=33,label=\textbf{\arabic*.}]
+\item \textbf{Cache and memory:} address $=$ tag $|$ index $|$ offset; AMAT $=$ hit $+$ miss rate $\times$ penalty; page table $+$ TLB; page fault; LRU, FIFO, OPT; Belady's anomaly for FIFO. Amdahl: $S=1/\big((1-f)+f/p\big)$.
+\item \textbf{OS:} SJF minimises average waiting time, round robin trades response against switches; deadlock needs mutual exclusion, hold and wait, no preemption and circular wait; the Banker's algorithm keeps the state safe.
+\item \textbf{ML:} bias--variance; precision, recall, $F_1$; gradient descent converges only for $\eta<2/\lambda_{max}$; backpropagation is reverse-mode differentiation; subtract the maximum in softmax; bf16 has fp32's range.
+\item \textbf{Parallel:} a data race is unordered conflicting access (undefined); wait on a condition variable with a predicate; memory orders relaxed, acquire/release, \texttt{seq\_cst}; false sharing at 64 bytes; break deadlock with a global lock order.
+\item \textbf{Python:} default arguments are evaluated once; closures capture variables, not values; \texttt{is} versus \texttt{==}; the GIL (threads for I/O, processes for CPU); \texttt{subprocess.run(..., timeout=...)}.
+\end{enumerate}
+\section*{Online assessment}
+\begin{enumerate}[nosep,leftmargin=2.2em,start=38,label=\textbf{\arabic*.}]
+\item \textbf{Tactics:} read the whole paper for 2 minutes; fastest marks first; about 90 seconds per MCQ; submit a correct brute force early; constraint $n=2\cdot10^5$ means $O(n\log n)$; cast to 64 bits \emph{before} multiplying.
+\item \textbf{Quant traps:} average speed is the harmonic mean; successive percentages multiply; CI $-$ SI for two years is $P(r/100)^2$; work adds \emph{rates}; arrangements with repeats divide by the factorials.
+\item \textbf{Last three minutes:} edge cases ($n=0$, $n=1$, all equal, negatives, maximum size), remove debug output, re-run the samples.
+\end{enumerate}
+
+
+% ===== 90b-cheat.tex.in =====
+\chapter{Cheat Sheets}
+\label{app:cheat}
+
+\section{Complexity of the usual structures and algorithms}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{4.0cm}L{2.2cm}L{2.5cm}L{2.5cm}Y@{}}
+\toprule
+\textbf{Structure} & \textbf{Access} & \textbf{Search} & \textbf{Insert} & \textbf{Notes}\\
+\midrule\endhead
+array / \texttt{std::vector} & $O(1)$ & $O(n)$ & $O(1)$ amortised at the end, $O(n)$ elsewhere & contiguous; reallocation doubles\\
+singly linked list & $O(n)$ & $O(n)$ & $O(1)$ at a known node & no random access; poor cache behaviour\\
+hash table (\texttt{unordered\_map}, \texttt{dict}) & --- & $O(1)$ average, $O(n)$ worst & $O(1)$ average & unordered; rehash on growth\\
+balanced BST (\texttt{std::map}, \texttt{std::set}) & --- & $O(\log n)$ & $O(\log n)$ & ordered iteration, lower/upper bound\\
+binary heap (\texttt{priority\_queue}) & min/max $O(1)$ & $O(n)$ & $O(\log n)$ & extract $O(\log n)$; build $O(n)$\\
+trie & --- & $O(L)$ & $O(L)$ & $L$ is the key length\\
+union--find with path compression and rank & --- & $\alpha(n)$ & union $\alpha(n)$ & near-constant\\
+Fenwick tree, segment tree & --- & $O(\log n)$ query & $O(\log n)$ update & prefix sums, range queries\\
+\bottomrule
+\end{xltabular}
+\end{center}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{4.4cm}L{3.4cm}Y@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Time} & \textbf{Notes}\\
+\midrule\endhead
+quicksort, \texttt{std::sort} (introsort) & $O(n\log n)$ average (introsort: worst case too) & in place, not stable\\
+merge sort, \texttt{std::stable\_sort}, Python \texttt{sorted} (Timsort) & $O(n\log n)$ & stable; Timsort is $O(n)$ on sorted input\\
+heap sort & $O(n\log n)$ & in place, not stable\\
+counting / radix sort & $O(n+k)$ / $O(d(n+k))$ & integer keys of bounded range\\
+BFS, DFS, topological sort & $O(V+E)$ & BFS gives fewest edges\\
+Dijkstra (binary heap) & $O((V+E)\log V)$ & non-negative weights only\\
+Bellman--Ford, Floyd--Warshall & $O(VE)$, $O(V^3)$ & negative edges; all pairs\\
+Kruskal, Prim (heap) & $O(E\log E)$, $O(E\log V)$ & minimum spanning tree\\
+binary search, two pointers, sliding window & $O(\log n)$, $O(n)$, $O(n)$ & the sorted / monotone patterns of Chapter~\ref{ch:dsa}\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+\section{Numbers worth knowing (printed by a C program on this build machine)}
+\begin{lstlisting}[language={C},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont]
+#include <stdio.h>
+#include <limits.h>
+#include <float.h>
+int main(void) {
+    printf("sizes (bytes): char %zu short %zu int %zu long %zu ", sizeof(char), sizeof(short), sizeof(int), sizeof(long));
+    printf("long long %zu pointer %zu float %zu double %zu ", sizeof(long long), sizeof(void *), sizeof(float), sizeof(double));
+    printf("long double %zu\n", sizeof(long double));
+    printf("INT_MAX %d  INT_MIN %d  UINT_MAX %u\n", INT_MAX, INT_MIN, UINT_MAX);
+    printf("LLONG_MAX %lld  ULLONG_MAX %llu\n", LLONG_MAX, ULLONG_MAX);
+    printf("FLT_EPSILON %g  DBL_EPSILON %g\n", FLT_EPSILON, DBL_EPSILON);
+    printf("FLT_MAX %g  DBL_MAX %g\n", FLT_MAX, DBL_MAX);
+    printf("2^10 = %d, 2^20 = %d, 2^30 = %d, ", 1 << 10, 1 << 20, 1 << 30);
+    printf("2^32 = %llu, 2^63 = %llu\n", 1ULL << 32, 1ULL << 63);
+    printf("ASCII: '0' = %d, 'A' = %d, 'a' = %d, ' ' = %d, newline = %d\n", '0', 'A', 'a', ' ', '\n');
+    return 0;
+}
+\end{lstlisting}
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[style=out,basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={Limits, sizes and constants (x86-64 Linux, GCC)}]
+sizes (bytes): char 1 short 2 int 4 long 8 long long 8 pointer 8 float 4 double 8 long double 16
+INT_MAX 2147483647  INT_MIN -2147483648  UINT_MAX 4294967295
+LLONG_MAX 9223372036854775807  ULLONG_MAX 18446744073709551615
+FLT_EPSILON 1.19209e-07  DBL_EPSILON 2.22045e-16
+FLT_MAX 3.40282e+38  DBL_MAX 1.79769e+308
+2^10 = 1024, 2^20 = 1048576, 2^30 = 1073741824, 2^32 = 4294967296, 2^63 = 9223372036854775808
+ASCII: '0' = 48, 'A' = 65, 'a' = 97, ' ' = 32, newline = 10
+\end{lstlisting}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{4.4cm}Y@{}}
+\toprule
+\textbf{Rule of thumb} & \textbf{Value}\\
+\midrule\endhead
+$2^{10}\approx10^3$, $2^{20}\approx10^6$, $2^{30}\approx10^9$ & why a 32-bit \texttt{int} ($\approx2.1\cdot10^9$) overflows for $10^5\times10^5$\\
+constraint $\to$ algorithm (about $10^8$ simple operations per second) & $n\le10$: $n!$; $n\le20$: $2^n$; $n\le500$: $n^3$; $n\le5\,000$: $n^2$; $n\le2\cdot10^5$: $n\log n$; $n\le10^7$: $n$; $n\le10^{18}$: $\log n$\\
+IEEE-754 binary32 / binary64 & 1+8+23 bits, bias 127, about 7 digits / 1+11+52 bits, bias 1023, about 16 digits\\
+latencies (orders of magnitude, hardware dependent) & L1 hit $\sim$1 ns, DRAM $\sim$100 ns, SSD $\sim$100 $\mu$s, disk seek $\sim$10 ms\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+\section{Command-line cheat sheet}
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{6.0cm}Y@{}}
+\toprule
+\textbf{Command} & \textbf{Purpose}\\
+\midrule\endhead
+\texttt{gcc -O2 -Wall -Wextra -g prog.c} & optimise, warn, keep debug info; \texttt{-S} assembly, \texttt{-E} preprocess only, \texttt{-c} object file\\
+\texttt{-fsanitize=address,undefined} / \texttt{-fsanitize=thread} & ASan + UBSan in one build; TSan in a separate one (it cannot be combined with ASan)\\
+\texttt{-fwrapv}, \texttt{-fno-strict-aliasing} & define signed wrap-around; disable type-based alias assumptions (a diagnostic, not a fix)\\
+\texttt{clang -S -emit-llvm -O0 -Xclang -disable-O0-optnone f.c} & textual LLVM IR that \texttt{opt} can still optimise\\
+\texttt{opt -passes='mem2reg,instcombine' f.ll -S}, \texttt{llc f.ll -o f.s} & run chosen passes; lower IR to assembly\\
+\texttt{llvm-reduce --test=./interesting.sh bad.ll} & shrink a failing IR while the script still reports the failure\\
+\texttt{tool | FileCheck test.ll}, \texttt{lit -v tests/} & match output against \texttt{CHECK} lines; run a test directory\\
+\texttt{nvcc -ptx k.cu}, \texttt{nvcc -arch=sm\_80 -cubin k.cu} & CUDA to PTX; to a binary for one architecture\\
+\texttt{cuobjdump -sass a.out}, \texttt{nvdisasm k.cubin} & disassemble SASS\\
+\texttt{compute-sanitizer --tool racecheck ./app} & GPU race detection (also \texttt{memcheck}, \texttt{synccheck}, \texttt{initcheck})\\
+\texttt{objdump -d}, \texttt{nm}, \texttt{readelf -h -S}, \texttt{ldd}, \texttt{file} & inspect binaries: code, symbols, sections, shared libraries\\
+\texttt{gdb -ex run --args ./prog}, \texttt{valgrind --leak-check=full ./prog} & debugger; memory errors and leaks\\
+\texttt{git bisect start}, \texttt{git bisect run ./test.sh} & find the first bad commit automatically\\
+\texttt{timeout 10 ./prog; echo \$?} & bound the run time; exit status 124 means a timeout\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+
+% ===== 90c-glossary.tex.in =====
+\chapter{Glossary}
+\label{app:gloss}
+
+\begin{center}\small
+\begin{xltabular}{\textwidth}{@{}L{3.6cm}Y@{}}
+\toprule
+\textbf{Term} & \textbf{Meaning}\\
+\midrule\endhead
+\textbf{ABI} & Application binary interface: calling convention, data layout and object-file conventions that let separately compiled code work together.\\
+\textbf{Alias analysis} & Decides whether two pointers may or must refer to the same memory; enables reordering, hoisting and vectorisation.\\
+\textbf{Alive2} & A translation-validation tool that proves with an SMT solver that an LLVM IR optimisation preserved behaviour.\\
+\textbf{Amdahl's law} & Speed-up on $p$ processors is at most $1/\big((1-f)+f/p\big)$ when a fraction $f$ is parallelisable.\\
+\textbf{AST} & Abstract syntax tree: the parse tree without the purely syntactic nodes.\\
+\textbf{Atomic operation} & An indivisible read-modify-write on one memory location with a defined memory order.\\
+\textbf{Back end} & The compiler part that selects instructions, schedules, allocates registers and emits machine code for one target.\\
+\textbf{Bank conflict} & Two threads of a warp access different addresses in the same shared-memory bank, so the accesses serialise.\\
+\textbf{Barrier} & A synchronisation point that no thread passes until all participants arrive (\texttt{\_\_syncthreads} in CUDA).\\
+\textbf{Basic block} & A maximal straight-line instruction sequence with one entry and one exit.\\
+\textbf{Belady's anomaly} & More frames can cause more page faults under FIFO replacement.\\
+\textbf{Bitcode} & The binary serialisation of LLVM IR (\texttt{.bc}).\\
+\textbf{Branch divergence} & Threads of one warp take different branches; the hardware executes both paths with masking.\\
+\textbf{Call by value} & The callee receives copies of the arguments; C has no other mode.\\
+\textbf{CFG} & Control-flow graph: nodes are basic blocks, edges are possible transfers of control.\\
+\textbf{Coalescing (memory)} & Merging a warp's neighbouring global-memory accesses into few transactions.\\
+\textbf{Coalescing (register)} & Giving the source and destination of a copy the same register so that the copy disappears.\\
+\textbf{Compute capability} & The version number of a GPU architecture's feature set (written \texttt{sm\_XY} in compiler flags).\\
+\textbf{Constant folding} & Evaluating constant expressions at compile time.\\
+\textbf{CSE} & Common-subexpression elimination: reuse an already computed value instead of recomputing it.\\
+\textbf{CUDA} & NVIDIA's programming model and toolchain for general-purpose computing on GPUs.\\
+\textbf{Data race} & Unordered conflicting accesses to one location by different threads, at least one a write; undefined in C and C++.\\
+\textbf{Dead-code elimination} & Removing computations whose results are never used.\\
+\textbf{Deadlock} & Threads wait for each other forever; needs mutual exclusion, hold and wait, no preemption and circular wait.\\
+\textbf{Delta debugging} & Automatic shrinking of a failing input while it still fails (ddmin); the basis of C-Reduce.\\
+\textbf{Differential testing} & Comparing the behaviour of several implementations on the same input; a disagreement reveals a bug.\\
+\textbf{Dominance frontier} & The nodes where a block's dominance ends; the places that need $\phi$-functions for its definitions.\\
+\textbf{Dominator} & Node $d$ dominates $n$ if every path from the entry to $n$ passes through $d$.\\
+\textbf{EMI} & Equivalence modulo inputs: a metamorphic technique that changes only code that is not executed for the given input.\\
+\textbf{FileCheck} & LLVM's pattern-matching tool that verifies a tool's output against \texttt{CHECK} lines in the test file.\\
+\textbf{FMA} & Fused multiply-add: $a\times b+c$ with a single rounding.\\
+\textbf{FOLLOW set} & Terminals that can appear immediately after a non-terminal in some sentential form.\\
+\textbf{Front end} & Lexing, parsing and semantic analysis, producing an AST or IR.\\
+\textbf{Fuzzing} & Feeding many generated or mutated inputs to a program to find crashes and misbehaviour.\\
+\textbf{GEP} & LLVM's \texttt{getelementptr}: pointer arithmetic on typed aggregates, without memory access.\\
+\textbf{GVN} & Global value numbering: finds expressions that always compute the same value.\\
+\textbf{Happens-before} & The partial order of memory operations that makes a program free of data races.\\
+\textbf{ICE} & Internal compiler error: the compiler crashes or hits an assertion.\\
+\textbf{Inlining} & Replacing a call by the body of the callee.\\
+\textbf{Interference graph} & Nodes are live ranges; an edge means they are live at the same time and cannot share a register.\\
+\textbf{IR} & Intermediate representation between the front end and the back end.\\
+\textbf{JIT} & Just-in-time compilation at run time.\\
+\textbf{LALR(1)} & An LR parsing class that merges LR(1) states with the same core; used by yacc and bison.\\
+\textbf{LICM} & Loop-invariant code motion: hoisting computations that do not change across iterations.\\
+\textbf{Linker} & Combines object files and libraries, resolves symbols and applies relocations.\\
+\textbf{lit} & LLVM's integrated tester: discovers test files, runs their \texttt{RUN:} lines and reports results.\\
+\textbf{LLVM} & A compiler infrastructure built around a typed SSA IR, a pass framework and many back ends.\\
+\textbf{Loop unrolling} & Replicating the loop body to reduce loop overhead and expose parallelism.\\
+\textbf{Maximal munch} & The lexer rule that takes the longest possible token.\\
+\textbf{Memory model} & The rules that say which values a read may return in a concurrent program.\\
+\textbf{Metamorphic testing} & Checking that a behaviour-preserving transformation of the input leaves the output unchanged.\\
+\textbf{MLIR} & A framework for multi-level IRs (dialects) that sits above LLVM IR.\\
+\textbf{Mutation testing} & Seeding small bugs to measure how many a test suite detects.\\
+\textbf{NVVM} & NVIDIA's LLVM-based IR and compiler library that produces PTX.\\
+\textbf{Occupancy} & Resident warps on a multiprocessor relative to the maximum.\\
+\textbf{Oracle} & The source of the expected result in a test.\\
+\textbf{Pass} & One analysis or transformation over the IR.\\
+\textbf{Peephole optimisation} & Rewriting a short window of instructions.\\
+\textbf{$\phi$-function} & An SSA pseudo-instruction that selects a value according to the predecessor that was taken.\\
+\textbf{Poison} & An LLVM value representing deferred undefined behaviour.\\
+\textbf{PTX} & Parallel Thread Execution: NVIDIA's virtual GPU ISA, compiled to SASS by \texttt{ptxas} or the driver.\\
+\textbf{RAII} & Resource acquisition is initialisation: a resource's lifetime is tied to an object's lifetime.\\
+\textbf{Register allocation} & Assigning virtual registers to a limited set of physical registers, spilling when necessary.\\
+\textbf{Relocation} & A patch to an address in object code once the final layout is known.\\
+\textbf{Sanitizer} & A compiler-inserted run-time checker (ASan, UBSan, MSan, TSan).\\
+\textbf{SASS} & The native machine code of an NVIDIA GPU generation.\\
+\textbf{SIMT} & Single instruction, multiple threads: the GPU execution model.\\
+\textbf{SSA} & Static single assignment form.\\
+\textbf{Strength reduction} & Replacing an expensive operation by a cheaper one (a multiply by a shift or an add).\\
+\textbf{Strict aliasing} & The rule that objects are accessed only through pointers of compatible types.\\
+\textbf{Target triple} & \texttt{arch-vendor-os-environment}, the target description given to a compiler.\\
+\textbf{TLB} & Translation lookaside buffer: a cache of virtual-to-physical page translations.\\
+\textbf{Triton} & A Python-embedded language and compiler for GPU kernels.\\
+\textbf{Undefined behaviour} & Behaviour for which the standard imposes no requirements; the compiler may assume it does not occur.\\
+\textbf{Vectorisation} & Turning scalar loop iterations into SIMD instructions.\\
+\textbf{Warp} & The group of 32 threads that a GPU executes together.\\
+\bottomrule
+\end{xltabular}
+\end{center}
+
+
+% ===== 90d-reading.tex.in =====
+\chapter{Sources, Reading List and Further Practice}
+\label{app:read}
+
+\begin{trapbox}[What was and was not opened]
+The numbered \emph{candidate reports} (S1--S25) and \emph{postings} (J1--J6) are listed with their sources in Chapter~\ref{ch:intel}; they were read as search-engine summaries. The documentation and paper entries below are cited from memory of their standard titles; the build sandbox could not open most of these sites, so \textbf{check a link before relying on it} and prefer the official page for anything version-specific (GPU architecture numbers change with every generation).
+\end{trapbox}
+
+\section{Official documentation}
+\begin{itemize}[nosep]
+\item \textbf{LLVM:} Language Reference \url{https://llvm.org/docs/LangRef.html}; Testing Guide \url{https://llvm.org/docs/TestingGuide.html}; FileCheck \url{https://llvm.org/docs/CommandGuide/FileCheck.html}; lit \url{https://llvm.org/docs/CommandGuide/lit.html}; NVPTX back end \url{https://llvm.org/docs/NVPTXUsage.html}.
+\item \textbf{NVIDIA:} PTX ISA \url{https://docs.nvidia.com/cuda/parallel-thread-execution/}; CUDA C++ Programming Guide \url{https://docs.nvidia.com/cuda/cuda-c-programming-guide/}; NVCC \url{https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/}; Compute Sanitizer \url{https://docs.nvidia.com/compute-sanitizer/}.
+\item \textbf{Tools to experiment with:} Compiler Explorer \url{https://godbolt.org} (compile C/C++/CUDA and see assembly, LLVM IR and optimisation remarks in the browser); cppreference \url{https://en.cppreference.com}.
+\end{itemize}
+
+\section{Books}
+\begin{itemize}[nosep]
+\item Aho, Lam, Sethi, Ullman, \emph{Compilers: Principles, Techniques, and Tools} (the ``Dragon Book''); Cooper and Torczon, \emph{Engineering a Compiler}; Appel, \emph{Modern Compiler Implementation}; Nystrom, \emph{Crafting Interpreters} (free online).
+\item Kirk and Hwu, \emph{Programming Massively Parallel Processors}; Hennessy and Patterson, \emph{Computer Architecture: A Quantitative Approach} and Patterson and Hennessy, \emph{Computer Organization and Design}; Williams, \emph{C++ Concurrency in Action}.
+\item Kernighan and Ritchie, \emph{The C Programming Language}; Stroustrup, \emph{A Tour of C++}; Meyers, \emph{Effective Modern C++}; Cormen et al., \emph{Introduction to Algorithms}; Silberschatz et al., \emph{Operating System Concepts}.
+\end{itemize}
+
+\section{Papers behind Chapters~\ref{ch:verif}, \ref{ch:lab} and \ref{ch:ml}}
+\begin{itemize}[nosep]
+\item Yang, Chen, Eide, Regehr: \emph{Finding and Understanding Bugs in C Compilers} (Csmith), PLDI 2011.
+\item Le, Afshari, Su: \emph{Compiler Validation via Equivalence Modulo Inputs} (EMI), PLDI 2014.
+\item Regehr, Chen, Cuoq, Eide, Ellison, Yang: \emph{Test-Case Reduction for C Compiler Bugs} (C-Reduce), PLDI 2012; Zeller and Hildebrandt: \emph{Simplifying and Isolating Failure-Inducing Input} (delta debugging), IEEE TSE 2002.
+\item Livinskii, Babokin, Regehr: \emph{Random Testing for C and C++ Compilers with YARPGen}, OOPSLA 2020.
+\item Lidbury, Lascu, Chong, Donaldson: \emph{Many-Core Compiler Fuzzing} (CLsmith), PLDI 2015; Donaldson et al.: \emph{Automated Testing of Graphics Shader Compilers}, OOPSLA 2017; Alglave et al.: \emph{GPU Concurrency: Weak Behaviours and Programming Assumptions}, ASPLOS 2015.
+\item Lopes, Lee, Hur, Liu, Regehr: \emph{Alive2: Bounded Translation Validation for LLVM}, PLDI 2021; Leroy: \emph{Formal Verification of a Realistic Compiler} (CompCert), CACM 2009.
+\item Cummins, Petoumenos, Murray, Leather: \emph{Compiler Fuzzing through Deep Learning} (DeepSmith), ISSTA 2018; Liu et al.: \emph{NNSmith: Generating Diverse and Valid Test Cases for Deep Learning Compilers}, ASPLOS 2023; Trofin et al.: \emph{MLGO: a Machine Learning Guided Compiler Optimizations Framework}, arXiv 2021.
+\item Lattner and Adve: \emph{LLVM: A Compilation Framework for Lifelong Program Analysis and Transformation}, CGO 2004; Cytron et al.: \emph{Efficiently Computing Static Single Assignment Form and the Control Dependence Graph}, TOPLAS 1991; Chaitin et al.: \emph{Register Allocation via Coloring}, 1981; Poletto and Sarkar: \emph{Linear Scan Register Allocation}, TOPLAS 1999; Tillet, Kung, Cox: \emph{Triton}, MAPL 2019.
+\end{itemize}
+
+\section{Further practice, in order of value for this role}
+\begin{enumerate}[nosep]
+\item Re-do the output-prediction drills of Chapters~\ref{ch:c}--\ref{ch:python} \emph{without} the answers, then compile the ones you missed.
+\item Solve the reported coding problems of Chapter~\ref{ch:dsa} again in the other language (C++ if you used Python).
+\item Take the mock OA of Chapter~\ref{ch:qbank} a second time two days later: the questions are fixed, so the second score measures what you retained.
+\item Read one real LLVM test (\texttt{llvm/test/Transforms/InstCombine/}) and one real FileCheck file: seeing the genre makes the verification vocabulary concrete.
+\item Search the candidate-report sites of Chapter~\ref{ch:intel} for your own team and year; reports written after your drive's format change are worth more than older ones.
+\end{enumerate}
+
+
+% ===== 90e-listings.tex.in =====
+\chapter{Source Listings}
+\label{app:listings}
+
+Every program that produced a table or a trace in this book is listed here in full, exactly as it was run. Long lines wrap. The programs are small on purpose: reading them is part of the preparation (``explain your mini compiler'' is a likely interview question).
+
+\section{\texttt{lrtool.py}: grammar analysis toolkit (Chapter~\ref{ch:parsing})}\label{app:toolkit}
+FIRST/FOLLOW, LL(1) tables, LR(0) automaton, SLR and LR(1)/LALR tables, parse traces.
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[language={Python},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={lrtool.py}]
+EPS = "eps"
+def parse_grammar(text):
+    """'E -> E + T | T' lines; symbols separated by spaces; 'eps' = empty. Returns ordered dict nt -> [tuple(symbols)]"""
+    g = {}
+    for line in text.strip().splitlines():
+        lhs, rhs = line.split("->")
+        g[lhs.strip()] = [tuple(s for s in alt.split() if s != EPS) for alt in rhs.split("|")]
+    return g
+
+def first_follow(g, start):
+    nts = set(g)
+    first = {A: set() for A in g}
+    def first_seq(seq):
+        out = set()
+        for X in seq:
+            fx = first[X] if X in nts else {X}
+            out |= fx - {EPS}
+            if EPS not in fx: return out
+        out.add(EPS); return out
+    changed = True
+    while changed:
+        changed = False
+        for A, alts in g.items():
+            for p in alts:
+                f = first_seq(p)
+                if not f <= first[A]: first[A] |= f; changed = True
+    follow = {A: set() for A in g}; follow[start].add("$")
+    changed = True
+    while changed:
+        changed = False
+        for A, alts in g.items():
+            for p in alts:
+                for i, B in enumerate(p):
+                    if B in nts:
+                        f = first_seq(p[i+1:])
+                        new = (f - {EPS}) | (follow[A] if EPS in f else set())
+                        if not new <= follow[B]: follow[B] |= new; changed = True
+    return first, follow, first_seq
+
+def ll1_table(g, start):
+    first, follow, first_seq = first_follow(g, start)
+    table, conflicts = {}, []
+    for A, alts in g.items():
+        for p in alts:
+            f = first_seq(p)
+            for a in (f - {EPS}) | (follow[A] if EPS in f else set()):
+                if (A, a) in table and table[(A, a)] != p: conflicts.append((A, a))
+                table[(A, a)] = p
+    return table, conflicts
+
+# ---------------- LR machinery ----------------
+def augment(g, start):
+    g2 = {start + "'": [(start,)]}; g2.update(g); return g2
+
+def lr0_states(g, start):
+    g = augment(g, start); nts = set(g)
+    prods = [(A, p) for A in g for p in g[A]]
+    idx = {pr: i for i, pr in enumerate(prods)}
+    def closure(items):
+        items = set(items); work = list(items)
+        while work:
+            A, p, d = work.pop()
+            if d < len(p) and p[d] in nts:
+                for q in g[p[d]]:
+                    it = (p[d], q, 0)
+                    if it not in items: items.add(it); work.append(it)
+        return frozenset(items)
+    def goto(I, X):
+        return closure({(A, p, d + 1) for (A, p, d) in I if d < len(p) and p[d] == X})
+    I0 = closure({(start + "'", (start,), 0)})
+    states, trans = [I0], {}
+    for I in states:
+        syms = []
+        for (A, p, d) in sorted(I, key=str):
+            if d < len(p) and p[d] not in syms: syms.append(p[d])
+        for X in syms:
+            J = goto(I, X)
+            if J not in states: states.append(J)
+            trans[(states.index(I), X)] = states.index(J)
+    return g, states, trans
+
+def slr_table(g0, start):
+    g, states, trans = lr0_states(g0, start)
+    _, follow, _ = first_follow(g0, start)
+    nts = set(g); action, cells = {}, set()
+    def put(s, a, act):
+        if (s, a) in action and action[(s, a)] != act: cells.add((s, a))     # count conflicted CELLS (order independent)
+        action[(s, a)] = act
+    for i, I in enumerate(states):
+        for (A, p, d) in I:
+            if d < len(p) and p[d] not in nts: put(i, p[d], ("s", trans[(i, p[d])]))
+            elif d == len(p):
+                if A == start + "'": put(i, "$", ("acc",))
+                else:
+                    for a in follow[A]: put(i, a, ("r", A, p))
+    goto_t = {(s, X): t for (s, X), t in trans.items() if X in nts}
+    return states, action, goto_t, sorted(cells)
+
+def lr1(g0, start, merge=False):
+    g = augment(g0, start); nts = set(g)
+    first, follow, first_seq = first_follow(g, start + "'")
+    def closure(items):
+        items = set(items); work = list(items)
+        while work:
+            A, p, d, la = work.pop()
+            if d < len(p) and p[d] in nts:
+                f = first_seq(p[d+1:] + (la,))
+                for q in g[p[d]]:
+                    for b in f - {EPS}:
+                        it = (p[d], q, 0, b)
+                        if it not in items: items.add(it); work.append(it)
+        return frozenset(items)
+    def goto(I, X): return closure({(A, p, d + 1, la) for (A, p, d, la) in I if d < len(p) and p[d] == X})
+    I0 = closure({(start + "'", (start,), 0, "$")})
+    states, trans = [I0], {}
+    for I in states:
+        syms = []
+        for (A, p, d, la) in sorted(I, key=str):
+            if d < len(p) and p[d] not in syms: syms.append(p[d])
+        for X in syms:
+            J = goto(I, X)
+            if J not in states: states.append(J)
+            trans[(states.index(I), X)] = states.index(J)
+    n_canonical = len(states)
+    # LALR: merge states with the same core
+    core = lambda I: frozenset((A, p, d) for (A, p, d, la) in I)
+    groups = {}
+    for i, I in enumerate(states): groups.setdefault(core(I), []).append(i)
+    rep = {i: min(grp) for grp in groups.values() for i in grp}
+    n_lalr = len(groups)
+    def conflicts_of(state_sets, mapping):
+        conflicts = set(); acts = {}
+        for i, I in state_sets.items():
+            for (A, p, d, la) in I:
+                if d == len(p):
+                    key = (i, la)
+                    act = ("acc",) if A == start + "'" else ("r", A, p)
+                    if key in acts and acts[key] != act: conflicts.add(key)
+                    acts[key] = act
+                elif p[d] not in nts:
+                    key = (i, p[d]); act = ("s", mapping[trans[(rep_or_id(i), p[d])]])
+                    if key in acts and acts[key] != act: conflicts.add(key)
+                    acts[key] = act
+        return sorted(conflicts)
+    rep_or_id = lambda i: i
+    canon = conflicts_of({i: I for i, I in enumerate(states)}, {i: i for i in range(len(states))})
+    merged = {}
+    for grp in groups.values():
+        m = min(grp); merged[m] = frozenset().union(*[states[i] for i in grp])
+    rep_or_id = lambda i: i
+    lalr_conf = conflicts_of(merged, rep)
+    return n_canonical, n_lalr, canon, lalr_conf
+
+EXPR = """E -> E + T | T
+T -> T * F | F
+F -> ( E ) | id"""
+LL1 = """E -> T E'
+E' -> + T E' | eps
+T -> F T'
+T' -> * F T' | eps
+F -> ( E ) | id"""
+G2 = """S -> L = R | R
+L -> * R | id
+R -> L"""
+G3 = """S -> a A d | b B d | a B e | b A e
+A -> c
+B -> c"""
+
+
+# ---------------- table printing and drivers (used by the demos) ----------------
+def prod_list(g):
+    return [(A, p) for A in g for p in g[A]]
+
+def show_grammar(g):
+    for i, (A, p) in enumerate(prod_list(g), 1):
+        print("  (%d) %s -> %s" % (i, A, " ".join(p) if p else "eps"))
+
+def print_ll1_table(g, start):
+    table, conflicts = ll1_table(g, start)
+    for (A, a), p in sorted(table.items()):
+        print("  M[%s,%s] = %s -> %s" % (A, a, A, " ".join(p) if p else "eps"))
+    print("  conflicts:", conflicts or "none  => the grammar is LL(1)")
+
+def ll1_parse(g, start, tokens):
+    table, _ = ll1_table(g, start)
+    stack = ["$", start]; toks = tokens + ["$"]; i = 0
+    print("  %-26s %-18s %s" % ("STACK (top at right)", "INPUT", "ACTION"))
+    while stack:
+        top, a = stack[-1], toks[i]
+        row = ("  %-26s %-18s " % (" ".join(stack), " ".join(toks[i:])))
+        if top == a == "$": print(row + "accept"); return
+        if top not in g:
+            if top != a: print(row + "ERROR"); return
+            stack.pop(); i += 1; print(row + "match " + a)
+        else:
+            p = table.get((top, a))
+            if p is None: print(row + "ERROR"); return
+            stack.pop(); stack.extend(reversed(p)); print(row + "%s -> %s" % (top, " ".join(p) if p else "eps"))
+
+def print_slr(g0, start):
+    states, action, goto_t, conf = slr_table(g0, start)
+    nts = [A for A in g0]; prods = {pr: i for i, pr in enumerate(prod_list(g0), 1)}
+    terms = []
+    for A, p in prod_list(g0):
+        for X in p:
+            if X not in g0 and X not in terms: terms.append(X)
+    terms.append("$")
+    print("  state | " + " ".join("%-4s" % t for t in terms) + " | " + " ".join("%-3s" % n for n in nts))
+    for s in range(len(states)):
+        cells = []
+        for t in terms:
+            a = action.get((s, t))
+            cells.append("%-4s" % ("" if a is None else ("s%d" % a[1] if a[0] == "s" else ("acc" if a[0] == "acc" else "r%d" % prods[(a[1], a[2])]))))
+        print("  %5d | %s | %s" % (s, " ".join(cells), " ".join("%-3s" % str(goto_t.get((s, n), "")) for n in nts)))
+    print("  conflicts:", len(conf))
+    return states, action, goto_t
+
+def lr_parse(g0, start, tokens):
+    states, action, goto_t, _ = slr_table(g0, start)
+    prods = {pr: i for i, pr in enumerate(prod_list(g0), 1)}
+    st = [0]; sym = []; toks = tokens + ["$"]; i = 0
+    print("  %-20s %-16s %-16s %s" % ("STATES", "SYMBOLS", "INPUT", "ACTION"))
+    while True:
+        s, a = st[-1], toks[i]; act = action.get((s, a))
+        row = "  %-20s %-16s %-16s " % (" ".join(map(str, st)), " ".join(sym), " ".join(toks[i:]))
+        if act is None: print(row + "ERROR"); return
+        if act[0] == "s": print(row + "shift %d" % act[1]); st.append(act[1]); sym.append(a); i += 1
+        elif act[0] == "r":
+            A, p = act[1], act[2]; print(row + "reduce %d: %s -> %s" % (prods[(A, p)], A, " ".join(p)))
+            if p: del st[-len(p):]; del sym[-len(p):]
+            st.append(goto_t[(st[-1], A)]); sym.append(A)
+        else: print(row + "accept"); return
+
+def classify(name, text, start):
+    g = parse_grammar(text)
+    states, action, goto_t, conf = slr_table(g, start)
+    n_can, n_lalr, canon, lalr = lr1(g, start)
+    table, ll1c = ll1_table(g, start)
+    print("%-7s LL(1)=%-3s | LR(0): %2d states | SLR conflicts %2d | LR(1): %2d st, %2d confl | LALR: %2d st, %2d confl" % (
+        name, "yes" if not ll1c else "no", len(states), len(conf), n_can, len(canon), n_lalr, len(lalr)))
+\end{lstlisting}
+\section{\texttt{tiny.py}: the miniature compiler (Chapter~\ref{ch:sem})}\label{app:tiny}
+Lexer, parser, tree-walking interpreter, three-address code, local optimiser, virtual machine.
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[language={Python},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={tiny.py}]
+"""tiny.py -- a complete miniature compiler: source -> tokens -> AST -> three-address code -> optimised TAC -> VM.
+
+Language: integer variables; + - * / % (division truncates toward zero, like C); comparisons and && || ! (0/1 results);
+statements: assignment, if/else, while, print(expr), blocks.   Division by zero traps (raises Trap).
+"""
+import re
+
+class Trap(Exception):
+    pass
+
+# ------------------------------------------------------------------ shared arithmetic semantics
+def apply_bin(op, a, b):
+    if op == "+": return a + b
+    if op == "-": return a - b
+    if op == "*": return a * b
+    if op in ("/", "%"):
+        if b == 0: raise Trap("division by zero")
+        q = abs(a) // abs(b)
+        q = q if (a >= 0) == (b >= 0) else -q          # truncate toward zero (C semantics)
+        return q if op == "/" else a - q * b
+    return int({"<": a < b, "<=": a <= b, ">": a > b, ">=": a >= b, "==": a == b, "!=": a != b}[op])
+
+# ------------------------------------------------------------------ lexer
+TOKEN = re.compile(r"\s*(?:(\d+)|([A-Za-z_]\w*)|(&&|\|\||==|!=|<=|>=|[-+*/%<>=!(){};]))")
+KEYWORDS = {"if", "else", "while", "print"}
+
+def lex(src):
+    pos, out = 0, []
+    while pos < len(src):
+        if src[pos:].strip() == "": break
+        m = TOKEN.match(src, pos)
+        if not m: raise SyntaxError("bad character at %d: %r" % (pos, src[pos:pos + 5]))
+        pos = m.end()
+        if m.group(1): out.append(("num", int(m.group(1))))
+        elif m.group(2): out.append(("kw" if m.group(2) in KEYWORDS else "id", m.group(2)))
+        else: out.append(("op", m.group(3)))
+    return out + [("eof", None)]
+
+# ------------------------------------------------------------------ parser (recursive descent + precedence climbing)
+PREC = {"||": 1, "&&": 2, "==": 3, "!=": 3, "<": 4, "<=": 4, ">": 4, ">=": 4, "+": 5, "-": 5, "*": 6, "/": 6, "%": 6}
+
+class Parser:
+    def __init__(self, src): self.t, self.i = lex(src), 0
+    def peek(self): return self.t[self.i]
+    def next(self): tok = self.t[self.i]; self.i += 1; return tok
+    def expect(self, v):
+        tok = self.next()
+        if tok[1] != v: raise SyntaxError("expected %r but found %r" % (v, tok[1]))
+    def program(self):
+        stmts = []
+        while self.peek()[0] != "eof": stmts.append(self.stmt())
+        return ("block", stmts)
+    def stmt(self):
+        kind, val = self.peek()
+        if val == "{":
+            self.next(); body = []
+            while self.peek()[1] != "}": body.append(self.stmt())
+            self.next(); return ("block", body)
+        if val == "if":
+            self.next(); self.expect("("); c = self.expr(); self.expect(")"); th = self.stmt(); el = None
+            if self.peek()[1] == "else": self.next(); el = self.stmt()
+            return ("if", c, th, el)
+        if val == "while":
+            self.next(); self.expect("("); c = self.expr(); self.expect(")"); return ("while", c, self.stmt())
+        if val == "print":
+            self.next(); self.expect("("); e = self.expr(); self.expect(")"); self.expect(";"); return ("print", e)
+        if kind == "id":
+            name = self.next()[1]; self.expect("="); e = self.expr(); self.expect(";"); return ("assign", name, e)
+        raise SyntaxError("unexpected token %r" % (val,))
+    def expr(self, minp=1):                               # precedence climbing: handles left associativity
+        lhs = self.unary()
+        while self.peek()[0] == "op" and PREC.get(self.peek()[1], 0) >= minp:
+            op = self.next()[1]
+            lhs = ("bin", op, lhs, self.expr(PREC[op] + 1))
+        return lhs
+    def unary(self):
+        kind, val = self.next()
+        if val in ("-", "!"): return ("un", val, self.unary())
+        if val == "(": e = self.expr(); self.expect(")"); return e
+        if kind == "num": return ("num", val)
+        if kind == "id": return ("var", val)
+        raise SyntaxError("unexpected token %r in expression" % (val,))
+
+def parse(src): return Parser(src).program()
+
+# ------------------------------------------------------------------ reference interpreter (the semantic oracle)
+def eval_expr(e, env):
+    k = e[0]
+    if k == "num": return e[1]
+    if k == "var": return env.get(e[1], 0)
+    if k == "un": v = eval_expr(e[2], env); return -v if e[1] == "-" else int(v == 0)
+    op = e[1]
+    if op == "&&": return int(eval_expr(e[2], env) != 0 and eval_expr(e[3], env) != 0)       # short circuit
+    if op == "||": return int(eval_expr(e[2], env) != 0 or eval_expr(e[3], env) != 0)
+    return apply_bin(op, eval_expr(e[2], env), eval_expr(e[3], env))
+
+def interpret(ast, max_steps=200000, env0=None):
+    env, out, steps = dict(env0 or {}), [], [0]
+    def run(s):
+        steps[0] += 1
+        if steps[0] > max_steps: raise Trap("step limit")
+        k = s[0]
+        if k == "block":
+            for x in s[1]: run(x)
+        elif k == "assign": env[s[1]] = eval_expr(s[2], env)
+        elif k == "print": out.append(eval_expr(s[1], env))
+        elif k == "if":
+            if eval_expr(s[1], env) != 0: run(s[2])
+            elif s[3] is not None: run(s[3])
+        elif k == "while":
+            while eval_expr(s[1], env) != 0:
+                run(s[2]); steps[0] += 1
+                if steps[0] > max_steps: raise Trap("step limit")
+    try: run(ast); return out, None
+    except Trap as t: return out, str(t)
+
+# ------------------------------------------------------------------ three-address code generation
+class Gen:
+    def __init__(self): self.code, self.nt, self.nl = [], 0, 0
+    def temp(self): self.nt += 1; return "t%d" % self.nt
+    def label(self): self.nl += 1; return "L%d" % self.nl
+    def emit(self, *ins): self.code.append(ins)
+    def expr(self, e):
+        k = e[0]
+        if k == "num": return e[1]
+        if k == "var": return e[1]
+        if k == "un" and e[1] == "-":
+            a = self.expr(e[2]); t = self.temp(); self.emit("un", t, "-", a); return t
+        if k == "bin" and e[1] not in ("&&", "||") and e[1] not in ("<", "<=", ">", ">=", "==", "!="):
+            a = self.expr(e[2]); b = self.expr(e[3]); t = self.temp(); self.emit("bin", t, e[1], a, b); return t
+        t, lt, lf, end = self.temp(), self.label(), self.label(), self.label()     # logical value: use jumping code
+        self.cond(e, lt, lf)
+        self.emit("label", lt); self.emit("mov", t, 1); self.emit("goto", end)
+        self.emit("label", lf); self.emit("mov", t, 0); self.emit("label", end)
+        return t
+    def cond(self, e, lt, lf):                                                     # jumping code: control flow IS the value
+        k = e[0]
+        if k == "bin" and e[1] == "&&":
+            mid = self.label(); self.cond(e[2], mid, lf); self.emit("label", mid); self.cond(e[3], lt, lf)
+        elif k == "bin" and e[1] == "||":
+            mid = self.label(); self.cond(e[2], lt, mid); self.emit("label", mid); self.cond(e[3], lt, lf)
+        elif k == "un" and e[1] == "!": self.cond(e[2], lf, lt)
+        elif k == "bin" and e[1] in ("<", "<=", ">", ">=", "==", "!="):
+            a = self.expr(e[2]); b = self.expr(e[3]); self.emit("if", a, e[1], b, lt); self.emit("goto", lf)
+        else:
+            v = self.expr(e); self.emit("if", v, "!=", 0, lt); self.emit("goto", lf)
+    def stmt(self, s):
+        k = s[0]
+        if k == "block":
+            for x in s[1]: self.stmt(x)
+        elif k == "assign": self.emit("mov", s[1], self.expr(s[2]))
+        elif k == "print": self.emit("print", self.expr(s[1]))
+        elif k == "if":
+            lt, lf, end = self.label(), self.label(), self.label()
+            self.cond(s[1], lt, lf); self.emit("label", lt); self.stmt(s[2]); self.emit("goto", end)
+            self.emit("label", lf)
+            if s[3] is not None: self.stmt(s[3])
+            self.emit("label", end)
+        elif k == "while":
+            top, body, end = self.label(), self.label(), self.label()
+            self.emit("label", top); self.cond(s[1], body, end)
+            self.emit("label", body); self.stmt(s[2]); self.emit("goto", top); self.emit("label", end)
+
+def to_tac(ast):
+    g = Gen(); g.stmt(ast); return g.code
+
+def fmt(ins):
+    k = ins[0]
+    if k == "label": return "%s:" % ins[1]
+    if k == "goto": return "    goto %s" % ins[1]
+    if k == "if": return "    if %s %s %s goto %s" % ins[1:]
+    if k == "bin": return "    %s = %s %s %s" % (ins[1], ins[3], ins[2], ins[4])
+    if k == "un": return "    %s = %s%s" % (ins[1], ins[2], ins[3])
+    if k == "mov": return "    %s = %s" % (ins[1], ins[2])
+    return "    print %s" % (ins[1],)
+
+def show(tac): return "\n".join(fmt(i) for i in tac)
+
+# ------------------------------------------------------------------ TAC virtual machine
+def run_tac(tac, max_steps=200000, env0=None):
+    labels = {ins[1]: i for i, ins in enumerate(tac) if ins[0] == "label"}
+    env, out, pc, steps = dict(env0 or {}), [], 0, 0
+    val = lambda a: a if isinstance(a, int) else env.get(a, 0)
+    try:
+        while pc < len(tac):
+            ins = tac[pc]; pc += 1; k = ins[0]
+            if k == "label": continue
+            steps += 1
+            if steps > max_steps: raise Trap("step limit")
+            if k == "goto": pc = labels[ins[1]]
+            elif k == "if":
+                if apply_bin(ins[2], val(ins[1]), val(ins[3])): pc = labels[ins[4]]
+            elif k == "bin": env[ins[1]] = apply_bin(ins[2], val(ins[3]), val(ins[4]))
+            elif k == "un": env[ins[1]] = -val(ins[3]) if ins[2] == "-" else int(val(ins[3]) == 0)
+            elif k == "mov": env[ins[1]] = val(ins[2])
+            elif k == "print": out.append(val(ins[1]))
+        return out, None, steps
+    except Trap as t:
+        return out, str(t), steps
+
+# ------------------------------------------------------------------ optimiser
+BUGGY_FOLD = False          # the verification lab flips this to inject a classic miscompilation
+
+def fold(op, a, b):
+    if BUGGY_FOLD and op == "/" and b != 0: return a // b            # BUG: floors instead of truncating toward zero
+    return apply_bin(op, a, b)
+
+def local_opt(tac):
+    """Per basic block: constant propagation + folding, copy propagation, algebraic simplification, common subexpression elimination."""
+    out, env, avail = [], {}, {}
+    def kill(name):
+        env.pop(name, None)
+        for k in [k for k, v in env.items() if v == name]: del env[k]
+        for k in [k for k, v in avail.items() if v == name or name in k[1:]]: del avail[k]
+    sub = lambda a: env.get(a, a) if isinstance(a, str) else a
+    for ins in tac:
+        k = ins[0]
+        if k == "label": env.clear(); avail.clear(); out.append(ins); continue
+        if k == "goto": out.append(ins); env.clear(); avail.clear(); continue
+        if k == "print": out.append(("print", sub(ins[1]))); continue
+        if k == "if":
+            a, b = sub(ins[1]), sub(ins[3])
+            if isinstance(a, int) and isinstance(b, int):
+                try:
+                    if fold(ins[2], a, b): out.append(("goto", ins[4]))
+                except Trap: out.append(("if", a, ins[2], b, ins[4]))
+            else: out.append(("if", a, ins[2], b, ins[4]))
+            env.clear(); avail.clear(); continue
+        if k == "mov":
+            src = sub(ins[2]); kill(ins[1]); out.append(("mov", ins[1], src))
+            if src != ins[1]: env[ins[1]] = src
+            continue
+        if k == "un":
+            a = sub(ins[3]); kill(ins[1])
+            if isinstance(a, int): v = -a if ins[2] == "-" else int(a == 0); out.append(("mov", ins[1], v)); env[ins[1]] = v; continue
+            key = ("un", ins[2], a)
+            if key in avail: out.append(("mov", ins[1], avail[key])); env[ins[1]] = avail[key]
+            else: out.append(("un", ins[1], ins[2], a)); avail[key] = ins[1]
+            continue
+        if k == "bin":
+            op, a, b = ins[2], sub(ins[3]), sub(ins[4]); dst = ins[1]; kill(dst)
+            res = None
+            if isinstance(a, int) and isinstance(b, int) and not (op in "/%" and b == 0): res = fold(op, a, b)
+            elif op == "+" and b == 0: res = a
+            elif op == "+" and a == 0: res = b
+            elif op == "-" and b == 0: res = a
+            elif op == "*" and b == 1: res = a
+            elif op == "*" and a == 1: res = b
+            elif op == "*" and (a == 0 or b == 0): res = 0
+            if res is not None:
+                out.append(("mov", dst, res));
+                if res != dst: env[dst] = res
+                continue
+            key = (op, a, b) if op not in "+*" else (op,) + tuple(sorted((a, b), key=str))
+            if key in avail: out.append(("mov", dst, avail[key])); env[dst] = avail[key]
+            else:
+                out.append(("bin", dst, op, a, b))
+                if dst not in (a, b): avail[key] = dst
+            continue
+        out.append(ins)
+    return out
+
+def uses(ins):
+    k = ins[0]
+    if k == "if": xs = (ins[1], ins[3])
+    elif k == "bin": xs = (ins[3], ins[4])
+    elif k == "un": xs = (ins[3],)
+    elif k == "mov": xs = (ins[2],)
+    elif k == "print": xs = (ins[1],)
+    else: xs = ()
+    return [x for x in xs if isinstance(x, str)]
+
+def remove_dead(tac):
+    """Remove definitions of names that are never read anywhere (flow-insensitive, hence always safe); iterate to a fixed point.
+    A division can trap, so it is only removed when its divisor is a non-zero constant."""
+    while True:
+        used = {u for ins in tac for u in uses(ins)}
+        new = [ins for ins in tac if not (ins[0] in ("bin", "un", "mov") and ins[1] not in used and
+                                          not (ins[0] == "bin" and ins[2] in "/%" and not (isinstance(ins[4], int) and ins[4] != 0)))]
+        if len(new) == len(tac): return tac
+        tac = new
+
+INVERT = {"<": ">=", "<=": ">", ">": "<=", ">=": "<", "==": "!=", "!=": "=="}
+
+def clean_jumps(tac):
+    """Control-flow clean-up: self-moves, branch inversion, goto-to-next, unreachable code, unreferenced labels."""
+    changed = True
+    while changed:
+        changed = False
+        out, i = [], 0
+        while i < len(tac):
+            ins = tac[i]
+            if ins[0] == "mov" and ins[1] == ins[2]:                                   # x = x
+                i += 1; changed = True; continue
+            if ins[0] == "if" and i + 2 < len(tac) and tac[i + 1][0] == "goto" and tac[i + 2] == ("label", ins[4]):
+                out.append(("if", ins[1], INVERT[ins[2]], ins[3], tac[i + 1][1]))      # if c goto A; goto B; A:   ==>   if !c goto B; A:
+                i += 2; changed = True; continue
+            if ins[0] == "goto" and i + 1 < len(tac) and tac[i + 1] == ("label", ins[1]):   # goto L; L:
+                i += 1; changed = True; continue
+            if out and out[-1][0] == "goto" and ins[0] != "label":                     # unreachable until the next label
+                i += 1; changed = True; continue
+            out.append(ins); i += 1
+        refs = {ins[-1] for ins in out if ins[0] in ("goto", "if")}
+        kept = [ins for ins in out if not (ins[0] == "label" and ins[1] not in refs)]
+        if len(kept) != len(out): changed = True
+        tac = kept
+    return tac
+
+def coalesce(tac):
+    """t = <expr>; v = t   ==>   v = <expr>   when t is a single-use compiler temporary (saves an instruction and a register)."""
+    count = {}
+    for ins in tac:
+        for u in uses(ins): count[u] = count.get(u, 0) + 1
+    out, i = [], 0
+    while i < len(tac):
+        ins = tac[i]
+        if (i + 1 < len(tac) and ins[0] in ("bin", "un", "mov") and re.fullmatch(r"t\d+", str(ins[1])) and count.get(ins[1]) == 1
+                and tac[i + 1][0] == "mov" and tac[i + 1][2] == ins[1]):
+            out.append((ins[0], tac[i + 1][1]) + ins[2:]); i += 2; continue
+        out.append(ins); i += 1
+    return out
+
+def optimise(tac):
+    for _ in range(4):
+        tac = coalesce(clean_jumps(remove_dead(local_opt(tac))))
+    return tac
+
+def compile_source(src, opt=True):
+    tac = to_tac(parse(src)); return optimise(tac) if opt else tac
+\end{lstlisting}
+\section{\texttt{ssa.py}, \texttt{dataflow.py}, \texttt{backend.py}: analyses and code generation (Chapters~\ref{ch:sem}, \ref{ch:opt})}\label{app:backend}
+Basic blocks, dominators, dominance frontiers and SSA; reaching definitions, liveness, available expressions, natural loops; register allocation by graph colouring and list scheduling.
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[language={Python},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={ssa.py}]
+"""ssa.py -- basic blocks, CFG, dominators, dominance frontiers, phi placement and renaming for tiny.py's TAC."""
+import tiny
+
+def basic_blocks(tac):
+    """Leaders: first instruction, every label that is a jump target, every instruction after a jump."""
+    targets = {ins[-1] for ins in tac if ins[0] in ("goto", "if")}
+    leaders = {0}
+    for i, ins in enumerate(tac):
+        if ins[0] == "label" and ins[1] in targets: leaders.add(i)
+        if ins[0] in ("goto", "if") and i + 1 < len(tac): leaders.add(i + 1)
+    cuts = sorted(leaders) + [len(tac)]
+    blocks = [tac[a:b] for a, b in zip(cuts, cuts[1:]) if a < b]
+    name = {}
+    for k, b in enumerate(blocks):
+        if b[0][0] == "label": name[b[0][1]] = k
+    succ = {k: [] for k in range(len(blocks))}
+    for k, b in enumerate(blocks):
+        last = b[-1]
+        if last[0] == "goto": succ[k].append(name[last[1]])
+        elif last[0] == "if": succ[k] += [name[last[4]]] + ([k + 1] if k + 1 < len(blocks) else [])
+        elif k + 1 < len(blocks): succ[k].append(k + 1)
+    return blocks, succ
+
+def dominators(succ, entry=0):
+    n = len(succ); pred = {k: [] for k in succ}
+    for a, ss in succ.items():
+        for b in ss: pred[b].append(a)
+    dom = {k: set(range(n)) for k in succ}; dom[entry] = {entry}
+    changed = True
+    while changed:
+        changed = False
+        for k in succ:
+            if k == entry or not pred[k]: continue
+            new = {k} | set.intersection(*(dom[p] for p in pred[k]))
+            if new != dom[k]: dom[k] = new; changed = True
+    idom = {}
+    for k in succ:
+        strict = dom[k] - {k}
+        if strict: idom[k] = max(strict, key=lambda d: len(dom[d]))        # the closest strict dominator
+    return dom, idom, pred
+
+def dominance_frontier(succ, idom, pred):
+    df = {k: set() for k in succ}
+    for b in succ:
+        if len(pred[b]) >= 2:                                   # join points only
+            for p in pred[b]:
+                runner = p
+                while runner != idom.get(b):
+                    df[runner].add(b); runner = idom[runner]
+    return df
+
+def defs_of(ins):
+    return [ins[1]] if ins[0] in ("bin", "un", "mov") else []
+
+def place_phis(blocks, df):
+    defsites = {}
+    for k, b in enumerate(blocks):
+        for ins in b:
+            for v in defs_of(ins): defsites.setdefault(v, set()).add(k)
+    phis = {k: [] for k in range(len(blocks))}
+    for v, sites in defsites.items():
+        if v.startswith("t"): continue                          # temporaries are single-definition already
+        work, done = list(sites), set()
+        while work:
+            b = work.pop()
+            for d in df[b]:
+                if d not in done:
+                    done.add(d); phis[d].append(v)
+                    if d not in sites: work.append(d)
+    return phis
+
+def to_ssa(blocks, succ, idom, phis):
+    """Renaming pass: walk the dominator tree keeping a stack of current versions per variable."""
+    kids = {k: [] for k in succ}
+    for b, d in idom.items(): kids[d].append(b)
+    counter, stack = {}, {}
+    block_of = {b[0][1]: k for k, b in enumerate(blocks) if b[0][0] == "label"}
+    is_var = lambda x: isinstance(x, str) and not x.startswith("t")       # temporaries are already single-assignment
+    def define(v, pushed):
+        if not is_var(v): return v
+        counter[v] = counter.get(v, 0) + 1
+        stack.setdefault(v, []).append("%s%d" % (v, counter[v])); pushed.append(v)
+        return stack[v][-1]
+    def cur(v): return stack[v][-1] if stack.get(v) else v + "0"
+    use = lambda a: cur(a) if is_var(a) else a
+    out = {k: [] for k in succ}
+    phi_args = {k: {v: {} for v in phis[k]} for k in succ}
+    phi_dst = {}
+    def rename(k):
+        pushed = []
+        for v in phis[k]: phi_dst[(k, v)] = define(v, pushed)
+        for ins in blocks[k]:
+            t = ins[0]
+            if t == "bin":     a, b = use(ins[3]), use(ins[4]); out[k].append("%s = %s %s %s" % (define(ins[1], pushed), a, ins[2], b))
+            elif t == "un":    a = use(ins[3]); out[k].append("%s = %s%s" % (define(ins[1], pushed), ins[2], a))
+            elif t == "mov":   a = use(ins[2]); out[k].append("%s = %s" % (define(ins[1], pushed), a))
+            elif t == "if":    out[k].append("if %s %s %s goto B%d" % (use(ins[1]), ins[2], use(ins[3]), block_of[ins[4]]))
+            elif t == "goto":  out[k].append("goto B%d" % block_of[ins[1]])
+            elif t == "print": out[k].append("print %s" % use(ins[1]))
+        for s_ in succ[k]:                                                 # fill the phi operands of each successor
+            for v in phis[s_]: phi_args[s_][v][k] = cur(v)
+        for c in kids[k]: rename(c)
+        for v in pushed: stack[v].pop()
+    rename(0)
+    return out, phi_args, phi_dst
+
+def report(src):
+    tac = tiny.compile_source(src)
+    blocks, succ = basic_blocks(tac)
+    print("Basic blocks and successors:")
+    for k, b in enumerate(blocks): print("  B%d: %-44s -> %s" % (k, "; ".join(tiny.fmt(i).strip() for i in b), succ[k]))
+    dom, idom, pred = dominators(succ)
+    df = dominance_frontier(succ, idom, pred)
+    phis = place_phis(blocks, df)
+    print("immediate dominators:", {k: idom[k] for k in sorted(idom)})
+    print("dominance frontiers :", {k: sorted(v) for k, v in df.items() if v})
+    print("phi functions needed:", {"B%d" % k: v for k, v in phis.items() if v})
+    out, phi_args, phi_dst = to_ssa(blocks, succ, idom, phis)
+    print("\nSSA form:")
+    for k in range(len(blocks)):
+        print("  B%d:" % k)
+        for v in phis[k]:
+            print("      %s = phi(%s)" % (phi_dst[(k, v)], ", ".join("%s [B%d]" % (a, p) for p, a in sorted(phi_args[k][v].items()))))
+        for line in out[k]: print("      " + line)
+\end{lstlisting}
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[language={Python},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={dataflow.py}]
+"""dataflow.py -- iterative data-flow analyses over the basic blocks of tiny.py's TAC.
+
+reaching definitions (forward, union), live variables (backward, union), available expressions (forward, intersection),
+natural loops and loop-invariant instructions.
+"""
+import tiny, ssa
+
+def defs_of(ins):  return [ins[1]] if ins[0] in ("bin", "un", "mov") else []
+def uses_of(ins):  return tiny.uses(ins)
+def expr_of(ins):
+    if ins[0] == "bin": return (ins[2], ins[3], ins[4])
+    if ins[0] == "un": return (ins[2], ins[3])
+    return None
+def efmt(e): return "%s%s" % (e[0], e[1]) if len(e) == 2 else "%s %s %s" % (e[1], e[0], e[2])
+
+class CFG:
+    def __init__(self, src):
+        self.tac = tiny.compile_source(src)
+        self.blocks, self.succ = ssa.basic_blocks(self.tac)
+        self.n = len(self.blocks)
+        self.pred = {k: [] for k in range(self.n)}
+        for a, ss in self.succ.items():
+            for b in ss: self.pred[b].append(a)
+        self.dom, self.idom, _ = ssa.dominators(self.succ)
+
+    def rpo(self):                                   # reverse post-order: the fastest order for forward problems
+        seen, order = set(), []
+        def dfs(k):
+            seen.add(k)
+            for s in self.succ[k]:
+                if s not in seen: dfs(s)
+            order.append(k)
+        dfs(0)
+        return order[::-1]
+
+def solve(cfg, gen, kill, forward, meet_union, universe=None):
+    """IN/OUT sets by round-robin iteration; returns (IN, OUT, number_of_passes_until_stable)."""
+    n = cfg.n; order = cfg.rpo() if forward else cfg.rpo()[::-1]
+    init = set() if meet_union else set(universe)
+    IN = {k: set(init) for k in range(n)}; OUT = {k: set(init) for k in range(n)}
+    edges = cfg.pred if forward else cfg.succ
+    boundary = 0 if forward else None
+    passes = 0
+    while True:
+        passes += 1; changed = False
+        for k in order:
+            ins = [OUT[p] for p in edges[k]] if forward else [IN[s] for s in edges[k]]
+            if not ins: new_meet = set()                                  # entry (forward) / exits (backward)
+            elif meet_union: new_meet = set().union(*ins)
+            else: new_meet = set.intersection(*ins)
+            new_out = gen[k] | (new_meet - kill[k])
+            if forward:
+                if new_meet != IN[k] or new_out != OUT[k]: changed = True
+                IN[k], OUT[k] = new_meet, new_out
+            else:                                                         # for backward problems "OUT" holds the block's IN-side result
+                if new_meet != OUT[k] or new_out != IN[k]: changed = True
+                OUT[k], IN[k] = new_meet, new_out
+        if not changed: return IN, OUT, passes
+
+def reaching_definitions(cfg):
+    defs, by_var = [], {}                                                # defs: list of (id, block, instruction index, var)
+    for b, blk in enumerate(cfg.blocks):
+        for i, ins in enumerate(blk):
+            for v in defs_of(ins):
+                d = len(defs) + 1; defs.append((d, b, i, v)); by_var.setdefault(v, set()).add(d)
+    gen, kill = {}, {}
+    for b, blk in enumerate(cfg.blocks):
+        g, last = set(), {}
+        for (d, bb, i, v) in defs:
+            if bb == b: last[v] = d
+        gen[b] = set(last.values())
+        kill[b] = set().union(*[by_var[v] - {last[v]} for v in last]) if last else set()
+    IN, OUT, passes = solve(cfg, gen, kill, True, True)
+    return defs, gen, kill, IN, OUT, passes
+
+def live_variables(cfg):
+    use, dfn = {}, {}
+    for b, blk in enumerate(cfg.blocks):
+        u, d = set(), set()
+        for ins in blk:
+            u |= {x for x in uses_of(ins) if x not in d}; d |= set(defs_of(ins))
+        use[b], dfn[b] = u, d
+    IN, OUT, passes = solve(cfg, use, dfn, False, True)
+    return use, dfn, IN, OUT, passes
+
+def available_expressions(cfg):
+    universe = {expr_of(i) for blk in cfg.blocks for i in blk if expr_of(i)}
+    gen, kill = {}, {}
+    for b, blk in enumerate(cfg.blocks):
+        g, killed = set(), set()
+        for ins in blk:
+            e = expr_of(ins)
+            if e: g.add(e)
+            for v in defs_of(ins):
+                dead = {x for x in universe if v in x[1:]}
+                g -= dead; killed |= dead
+        gen[b], kill[b] = g, killed
+    IN, OUT, passes = solve(cfg, gen, kill, True, False, universe)
+    return universe, gen, kill, IN, OUT, passes
+
+def natural_loops(cfg):
+    loops = {}
+    for n in range(cfg.n):
+        for h in cfg.succ[n]:
+            if h in cfg.dom[n]:                                           # back edge n -> h: the head dominates the tail
+                body, stack = {h, n}, [n]
+                while stack:
+                    m = stack.pop()
+                    for p in cfg.pred[m]:
+                        if p not in body: body.add(p); stack.append(p)
+                loops.setdefault(h, set()).update(body)
+    return loops
+
+def loop_invariants(cfg):
+    defs, gen, kill, IN, OUT, _ = reaching_definitions(cfg)
+    loops = natural_loops(cfg); result = {}
+    for h, body in loops.items():
+        inv = set()
+        changed = True
+        while changed:
+            changed = False
+            for b in sorted(body):
+                reach = set(IN[b])
+                for i, ins in enumerate(cfg.blocks[b]):
+                    if ins[0] in ("bin", "un", "mov") and (b, i) not in inv:
+                        ok = True
+                        for x in uses_of(ins):
+                            rd = {d for d in reach if defs[d - 1][3] == x}           # definitions of x that reach this point
+                            inside = [defs[d - 1] for d in rd if defs[d - 1][1] in body]
+                            if inside and not (len(rd) == 1 and (inside[0][1], inside[0][2]) in inv): ok = False
+                        if ok and not (ins[0] == "bin" and ins[2] in "/%"): inv.add((b, i)); changed = True
+                    for v in defs_of(ins):                                            # update reaching set inside the block
+                        reach = {d for d in reach if defs[d - 1][3] != v} | {d for (d, bb, ii, vv) in defs if bb == b and ii == i}
+        result[h] = (body, sorted(inv))
+    return result
+
+def report(src, which=("rd", "live", "avail")):
+    cfg = CFG(src)
+    print("Basic blocks:")
+    for k, b in enumerate(cfg.blocks): print("  B%d: %-46s -> %s" % (k, "; ".join(tiny.fmt(i).strip() for i in b), cfg.succ[k]))
+    if "rd" in which:
+        defs, gen, kill, IN, OUT, passes = reaching_definitions(cfg)
+        print("\nReaching definitions (forward, union) -- stable after %d passes" % passes)
+        print("  definitions:", "  ".join("d%d:%s@B%d" % (d, v, b) for d, b, i, v in defs))
+        for k in range(cfg.n):
+            f = lambda S: "{" + ",".join("d%d" % d for d in sorted(S)) + "}"
+            print("  B%d  gen=%-12s kill=%-16s IN=%-22s OUT=%s" % (k, f(gen[k]), f(kill[k]), f(IN[k]), f(OUT[k])))
+    if "live" in which:
+        use, dfn, IN, OUT, passes = live_variables(cfg)
+        print("\nLive variables (backward, union) -- stable after %d passes" % passes)
+        f = lambda S: "{" + ",".join(sorted(S)) + "}"
+        for k in range(cfg.n):
+            print("  B%d  use=%-10s def=%-10s IN=%-14s OUT=%s" % (k, f(use[k]), f(dfn[k]), f(IN[k]), f(OUT[k])))
+    if "avail" in which:
+        U, gen, kill, IN, OUT, passes = available_expressions(cfg)
+        print("\nAvailable expressions (forward, intersection) -- stable after %d passes" % passes)
+        f = lambda S: "{" + ", ".join(sorted(efmt(e) for e in S)) + "}"
+        for k in range(cfg.n):
+            print("  B%d  gen=%-22s IN=%-24s OUT=%s" % (k, f(gen[k]), f(IN[k]), f(OUT[k])))
+    if "loops" in which:
+        for h, (body, inv) in loop_invariants(cfg).items():
+            print("\nNatural loop with header B%d, body %s" % (h, sorted(body)))
+            print("  loop-invariant instructions:", [tiny.fmt(cfg.blocks[b][i]).strip() + "  (B%d)" % b for b, i in inv] or "none")
+\end{lstlisting}
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[language={Python},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={backend.py}]
+"""backend.py -- liveness, interference graphs, Chaitin/Briggs graph-colouring register allocation, list scheduling."""
+import tiny
+
+def defs(ins): return [ins[1]] if ins[0] in ("bin", "un", "mov") else []
+
+def live_after(tac, live_out=()):
+    """Backward scan over straight-line code: live[i] = variables live immediately AFTER instruction i."""
+    live, after = set(live_out), [None] * len(tac)
+    for i in range(len(tac) - 1, -1, -1):
+        after[i] = set(live)
+        live -= set(defs(tac[i])); live |= set(tiny.uses(tac[i]))
+    return after, live                                   # 'live' is now the set of inputs (live at entry)
+
+def interference(tac, live_out=()):
+    after, entry = live_after(tac, live_out)
+    edges = {frozenset((a, b)) for a in entry for b in entry if a < b}            # simultaneously live inputs
+    for i, ins in enumerate(tac):
+        for d in defs(ins):
+            for v in after[i]:
+                if v != d and not (ins[0] == "mov" and ins[2] == v):              # a copy does not make src and dst interfere
+                    edges.add(frozenset((d, v)))
+    return edges
+
+def colour(nodes, edges, k):
+    """Chaitin/Briggs: simplify (remove a node of degree < k), push it; if none exists push the highest-degree node
+    optimistically; then pop and select a colour not used by coloured neighbours; nodes with no free colour are spilled."""
+    adj = {n: set() for n in nodes}
+    for e in edges:
+        a, b = tuple(e); adj[a].add(b); adj[b].add(a)
+    work, stack = set(nodes), []
+    while work:
+        low = [n for n in sorted(work) if len(adj[n] & work) < k]
+        n = low[0] if low else max(sorted(work), key=lambda x: len(adj[x] & work))
+        stack.append(n); work.remove(n)
+    colouring, spilled = {}, []
+    while stack:
+        n = stack.pop()
+        used = {colouring[m] for m in adj[n] if m in colouring}
+        free = [c for c in range(k) if c not in used]
+        if free: colouring[n] = free[0]
+        else: spilled.append(n)
+    return colouring, spilled
+
+def allocate(src, k):
+    tac = tiny.compile_source(src, opt=False)
+    after, entry = live_after(tac)
+    nodes = sorted({v for ins in tac for v in defs(ins) + tiny.uses(ins)})
+    edges = interference(tac)
+    col, spilled = colour(nodes, edges, k)
+    print("registers available: k = %d" % k)
+    print("TAC:");  print(tiny.show(tac))
+    print("live after each instruction:", [sorted(s) for s in after])
+    print("interference edges:", sorted("%s-%s" % tuple(sorted(e)) for e in edges))
+    print("colouring:", {v: "r%d" % c for v, c in sorted(col.items())}, "| spilled:", spilled or "none")
+    r = lambda x: ("r%d" % col[x]) if isinstance(x, str) and x in col else (("[stack:%s]" % x) if isinstance(x, str) else str(x))
+    if not spilled:
+        print("allocated code:")
+        for ins in tac:
+            if ins[0] == "bin": print("    %s = %s %s %s" % (r(ins[1]), r(ins[3]), ins[2], r(ins[4])))
+            elif ins[0] == "un": print("    %s = %s%s" % (r(ins[1]), ins[2], r(ins[3])))
+            elif ins[0] == "mov": print("    %s = %s" % (r(ins[1]), r(ins[2])))
+            elif ins[0] == "print": print("    print %s" % r(ins[1]))
+
+def cycles(order, lat, deps, show=False):
+    """In-order, single-issue pipeline with interlocks: an instruction issues when the previous one has issued
+    and all its operands are ready."""
+    ready, t, issue = {}, 0, {}
+    for ins in order:
+        t = max([t] + [ready[d] for d in deps[ins]])
+        issue[ins] = t; ready[ins] = t + lat[ins]; t += 1
+    if show:
+        for ins in order: print("    cycle %2d: issue %-22s result ready at %d" % (issue[ins], ins, ready[ins]))
+    return max(ready.values())
+
+def list_schedule(lat, deps):
+    """Greedy list scheduling: among instructions whose dependences are satisfied, pick the one with the longest latency path to the end."""
+    succs = {i: [j for j in deps if i in deps[j]] for i in deps}
+    height = {}
+    def h(i):
+        if i not in height: height[i] = lat[i] + max([h(j) for j in succs[i]] or [0])
+        return height[i]
+    order, done = [], set()
+    while len(order) < len(deps):
+        ready = [i for i in deps if i not in done and all(d in done for d in deps[i])]
+        best = max(ready, key=lambda i: (h(i), -list(deps).index(i)))
+        order.append(best); done.add(best)
+    return order
+\end{lstlisting}
+\section{Aptitude checkers (Chapters~\ref{ch:apt}, \ref{ch:qbank})}\label{app:aptitude}
+\texttt{ap\_logic.py} solves the reasoning question types by brute force and is imported by the programs that recompute the mock-test keys; \texttt{ap\_mock.py} is the generated checker of the aptitude mock test (Chapter~\ref{ch:apt}).
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[language={Python},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={ap\_logic.py}]
+import itertools
+
+# ---- syllogisms by exhaustive model checking: a conclusion FOLLOWS if it holds in every model of the premises ----
+TERMS = "ABC"
+
+def stmt(kind, x, y):                       # a statement is a predicate over a model (a list of elements)
+    i, j = TERMS.index(x), TERMS.index(y)
+    if kind == "all": return lambda m: all(e[j] for e in m if e[i])
+    if kind == "no": return lambda m: not any(e[i] and e[j] for e in m)
+    if kind == "some": return lambda m: any(e[i] and e[j] for e in m)
+    return lambda m: any(e[i] and not e[j] for e in m)          # "some x are not y"
+
+def models(premises, nonempty, size=5):     # every multiset of `size` elements (each in some subset of A, B, C)
+    for m in itertools.combinations_with_replacement(list(itertools.product((0, 1), repeat=3)), size):
+        if nonempty and not all(any(e[k] for e in m) for k in range(3)): continue   # exam convention: sets non-empty
+        if all(p(m) for p in premises): yield m
+
+def follows(premises, conclusion, nonempty, size=5):
+    return all(conclusion(m) for m in models(premises, nonempty, size))
+
+def either_or(premises, c1, c2, nonempty, size=5):          # exactly one of the two holds in every model
+    return all(c1(m) != c2(m) for m in models(premises, nonempty, size))
+
+KINDS = {"all": "All %s are %s", "no": "No %s is %s", "some": "Some %s are %s", "somenot": "Some %s are not %s"}
+def say(kind, x, y): return KINDS[kind] % (x, y)
+
+def two_premise_table():                    # what follows about A and C from a premise about A,B and one about B,C
+    cands = [("all", "A", "C"), ("no", "A", "C"), ("some", "A", "C"), ("somenot", "A", "C"),
+             ("all", "C", "A"), ("somenot", "C", "A")]               # (no/some are symmetric, so they need no repeat)
+    rows = []
+    for k1, k2 in itertools.product(KINDS, KINDS):
+        prem = [stmt(k1, "A", "B"), stmt(k2, "B", "C")]
+        strict = [say(*c) for c in cands if follows(prem, stmt(*c), False)]
+        exam = [say(*c) for c in cands if follows(prem, stmt(*c), True) and say(*c) not in strict]
+        rows.append((say(k1, "A", "B") + "; " + say(k2, "B", "C"), strict, exam))
+    return rows
+
+# ---- seating arrangement: brute force over the 5! = 120 orders ---------------------------------------------------
+PEOPLE = "PQRST"
+RULES = [("R sits exactly in the middle", lambda p: p.index("R") == 2),
+         ("P does not sit at an end", lambda p: p.index("P") not in (0, 4)),
+         ("Q sits somewhere to the right of R", lambda p: p.index("Q") > p.index("R")),
+         ("S sits next to P", lambda p: abs(p.index("S") - p.index("P")) == 1),
+         ("T does not sit at an end", lambda p: p.index("T") not in (0, 4))]
+
+def seatings(skip=None):                    # orders (left to right) satisfying all rules except rule number `skip`
+    return ["".join(p) for p in itertools.permutations(PEOPLE)
+            if all(r(p) for i, (_, r) in enumerate(RULES) if i != skip)]
+
+# ---- direction sense, coding-decoding, series, blood relations, cubes ------------------------------------------
+def walk(moves):                            # start facing north at (0, 0); x grows to the east
+    x = y = 0
+    dx, dy = 0, 1
+    for turn, dist in moves:
+        if turn == "R": dx, dy = dy, -dx
+        if turn == "L": dx, dy = -dy, dx
+        x, y = x + dx * dist, y + dy * dist
+    return x, y
+
+def shift(s, k): return "".join(chr((ord(c) - 65 + k) % 26 + 65) for c in s)
+
+def diffs(seq): return [b - a for a, b in zip(seq, seq[1:])]
+
+def geometric(s):                           # s[i+1] / s[i] constant (cross-multiplied to stay in integers)
+    return len(s) >= 3 and s[0] != 0 and all(s[i + 1] * s[0] == s[i] * s[1] for i in range(len(s) - 1))
+
+def next_term(seq):                         # (rule, next value); tries the usual exam patterns in this order
+    if geometric(seq): return "geometric", seq[-1] * seq[1] // seq[0]
+    if len(seq) >= 5 and all(seq[i] == seq[i - 1] + seq[i - 2] for i in range(2, len(seq))):
+        return "Fibonacci", seq[-1] + seq[-2]
+    rows = [list(seq)]                                           # difference table until a constant row appears
+    while len(rows[-1]) > 1 and len(set(rows[-1])) > 1: rows.append(diffs(rows[-1]))
+    if len(rows[-1]) >= 2 and len(set(rows[-1])) == 1:           # two equal entries are needed to trust the pattern
+        total = rows[-1][0]
+        for r in reversed(rows[:-1]): total = r[-1] + total
+        return "constant after %d difference row(s)" % (len(rows) - 1), total
+    d = diffs(seq)
+    if geometric(d): return "differences are geometric", seq[-1] + d[-1] * d[1] // d[0]
+    if len(seq) >= 6:                                            # two interleaved series: extend the one that is next
+        r = next_term(seq[len(seq) % 2::2])
+        if r: return "interleaved, " + r[0], r[1]
+
+def blood_relations():                      # "His mother is the only daughter of MY mother" -- all small families
+    found = set()
+    for mothers in itertools.product(range(-1, 4), repeat=4):            # mother of person i (-1: unknown)
+        if any(m == i for i, m in enumerate(mothers)): continue
+        for sex in itertools.product("MF", repeat=4):
+            for w, x in itertools.permutations(range(4), 2):
+                if sex[w] != "F" or sex[x] != "M" or mothers[w] < 0: continue
+                girls = [p for p in range(4) if mothers[p] == mothers[w] and sex[p] == "F"]
+                if len(girls) == 1 and mothers[x] == girls[0]:           # the premise holds in this family
+                    found.add("woman is his mother" if mothers[x] == w else "something else")
+    return found
+
+def painted_cube(n):                        # n x n x n cube painted outside, cut into unit cubes: painted-face counts
+    counts = [0] * 4
+    for p in itertools.product(range(n), repeat=3): counts[sum(c in (0, n - 1) for c in p)] += 1
+    return counts
+
+if __name__ == "__main__":
+    premises = [stmt("all", "A", "B"), stmt("some", "B", "C")]
+    print("A = engineers, B = graduates, C = artists.  Premises: All A are B.  Some B are C.")
+    print("  %-33s %-14s %s" % ("conclusion", "strict logic", "exam convention (sets non-empty)"))
+    for text, concl in (("Some engineers are artists", stmt("some", "A", "C")),
+                        ("Some artists are graduates", stmt("some", "C", "B")),
+                        ("No engineer is an artist", stmt("no", "A", "C")),
+                        ("Some graduates are engineers", stmt("some", "B", "A")),
+                        ("Some artists are not engineers", stmt("somenot", "C", "A"))):
+        yn = lambda flag: "FOLLOWS" if flag else "no"
+        print("  %-33s %-14s %s" % (text, yn(follows(premises, concl, False)), yn(follows(premises, concl, True))))
+    eo = either_or(premises, stmt("some", "A", "C"), stmt("no", "A", "C"), False)
+    print("  exactly one of 'Some engineers are artists' / 'No engineer is an artist' holds in every model:", eo)
+    print("  -> the exam answer is 'either I or II follows'")
+    rows = two_premise_table()
+    print("\nwhat follows about A and C from one premise about A,B and one about B,C:")
+    print("  %-34s %-18s %s" % ("premises", "strict logic", "extra under the exam convention"))
+    for prem, strict, exam in rows:
+        if strict or exam: print("  %-34s %-18s %s" % (prem, "; ".join(strict) or "-", "; ".join(exam) or "-"))
+    silent = sum(1 for r in rows if not r[1] + r[2])
+    print("  the other %d of the 16 premise pairs allow no conclusion linking A and C" % silent)
+
+    sols = seatings()
+    print("\nfive people P Q R S T in a row (left to right); rules:")
+    for k, (text, _) in enumerate(RULES): print("  %d. %s" % (k + 1, text))
+    print("arrangements that satisfy all rules:", len(sols), "->", sols)
+    for k in range(len(RULES)):
+        print("   without rule %d there would be %d arrangements" % (k + 1, len(seatings(skip=k))))
+
+    x, y = walk([(None, 10), ("R", 5), ("R", 10), ("L", 3)])
+    print("\nwalk 10 m north, right 5 m, right 10 m, left 3 m -> position (%d, %d): %d m %s of the start"
+          % (x, y, abs(x), "east" if x > 0 else "west"))
+    print("shift-by-1 code: COMPILER -> %s, so PTX -> %s;  reverse + shift: NVIDIA -> %s"
+          % (shift("COMPILER", 1), shift("PTX", 1), shift("NVIDIA"[::-1], 1)))
+    print("blood relation, all small families checked ->", sorted(blood_relations()))
+    print("4x4x4 cube painted outside, cut into 64 unit cubes: with 0/1/2/3 painted faces =", painted_cube(4))
+    print("   (formulas: (n-2)^3, 6(n-2)^2, 12(n-2), 8)")
+
+    print()
+    for s in ([2, 6, 12, 20, 30], [3, 6, 11, 18, 27], [1, 1, 2, 3, 5, 8], [2, 3, 5, 9, 17], [3, 8, 6, 13, 9, 18, 12],
+              [2, 6, 18, 54]):
+        rule, nxt = next_term(s)
+        print("series %-26s next = %-3d (%s)" % (s, nxt, rule))
+\end{lstlisting}
+\Needspace*{5\baselineskip}
+\begin{lstlisting}[language={Python},basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont,title={ap\_mock.py}]
+from fractions import Fraction as F
+import itertools, math
+from ap_puzzles import bridge, jugs, egg_drop
+from ap_coins import min_weighings
+from ap_logic import stmt, follows, seatings, walk, shift, next_term, blood_relations
+
+PREM = [stmt("all", "A", "B"), stmt("some", "B", "C")]           # premises of the syllogism question
+sales = {2020: 80, 2021: 100, 2022: 90, 2023: 135, 2024: 189}   # data of the data-interpretation question
+rows = []
+
+def chk(n, key, computed, options):         # which options equal the computed value? exactly the keyed one, please
+    hits = [letter for letter, o in zip("ABCD", options) if o == computed]
+    rows.append((n, key, hits, computed))
+
+def show(x):
+    return "(" + ", ".join(show(e) for e in x) + ")" if isinstance(x, tuple) else str(x)
+
+chk(1, "B", (F(125, 100) * F(90, 100) - 1) * 100, [F(10), F(25, 2), F(15), F(35, 2)])
+chk(2, "C", (1 - 4 * (F(1, 12) + F(1, 18))) / F(1, 18), [F(6), F(7), F(8), F(9)])
+chk(3, "D", F(150 + 250, 20) * F(18, 5), [F(54), F(60), F(66), F(72)])
+chk(4, "A", 40 * F(3, 4) * F(2, 3) - 40 * F(1, 4), [F(10), F(15), F(20), F(25)])
+chk(5, "C", 5000 * F(11, 10) ** 2 - 5000 - 5000 * F(10, 100) * 2, [F(10), F(25), F(50), F(100)])
+chk(6, "B", pow(7, 123, 10), [1, 3, 7, 9])
+chk(7, "C", len(str(math.factorial(100))) - len(str(math.factorial(100)).rstrip("0")), [20, 22, 24, 25])
+chk(8, "D", sum(1 for d in range(1, 361) if 360 % d == 0), [12, 16, 20, 24])
+chk(9, "A", F(2 * 120, F(120, 60) + F(120, 40)), [F(48), F(50), F(52), F(54)])
+chk(10, "B",
+    F(sum(1 for a in range(1, 7) for b in range(1, 7) if a + b == 8), 36),
+    [F(1, 6), F(5, 36), F(1, 9), F(1, 12)])
+chk(11, "A", len(set(itertools.permutations("LEVEL"))), [30, 60, 90, 120])
+chk(12, "C", abs((3 + F(40, 60)) * 30 - 40 * 6), [120, 125, 130, 135])
+chk(13, "A", next(5 * x for x in range(1, 50) if F(3 * x + 6, 5 * x + 6) == F(3, 4)), [10, 12, 15, 18])
+chk(14, "D",
+    next(b for b in range(1, 1000) if math.gcd(36, b) == 6 and math.lcm(36, b) == 180),
+    [12, 15, 24, 30])
+chk(15, "D",
+    max(((y, F(sales[y], sales[y - 1]) - 1) for y in range(2021, 2025)), key=lambda t: t[1]),
+    [(2021, F(1, 4)), (2024, F(2, 5)), (2022, F(1, 10)), (2023, F(1, 2))])
+chk(16, "A", pow(2, 100, 7), [2, 3, 4, 6])
+chk(17, "B", F(math.comb(5, 2), math.comb(8, 2)), [F(3, 28), F(5, 14), F(25, 64), F(15, 28)])
+chk(18, "C",
+    F(20, 100) * F(5, 100) / (F(50, 100) * F(2, 100) + F(30, 100) * F(3, 100) + F(20, 100) * F(5, 100)),
+    [F(1, 5), F(9, 29), F(10, 29), F(1, 2)])
+chk(19, "B", next_term([2, 6, 12, 20, 30])[1], [40, 42, 44, 48])
+chk(20, "D", next_term([3, 8, 6, 13, 9, 18, 12])[1], [15, 21, 22, 23])
+chk(21, "A",
+    shift("PTX", next(k for k in range(26) if shift("COMPILER", k) == "DPNQJMFS")),
+    ["QUY", "QTX", "PUX", "OSW"])
+chk(22, "D", walk([(None, 10), ("R", 5), ("R", 10), ("L", 3)]), [(3, 0), (5, 0), (-8, 0), (8, 0)])
+chk(23, "A",
+    tuple(n for n, c in (("I", stmt("some", "C", "B")), ("II", stmt("some", "A", "C"))) if follows(PREM, c, False)),
+    [("I",), ("II",), ("I", "II"), ()])
+chk(24, "B", seatings()[0][-1], ["P", "Q", "S", "T"])
+chk(25, "B",
+    "Mother" if blood_relations() == {"woman is his mother"} else None,
+    ["Sister", "Mother", "Aunt", "Daughter"])
+chk(26, "C", sum(1 for place in range(1, 32) if 12 < place < 31 - 15 + 1), [2, 3, 4, 5])
+chk(27, "A", bridge((1, 2, 5, 10)), [17, 18, 19, 20])
+chk(28, "C", len(jugs(3, 5, 4)) - 1, [4, 5, 6, 7])
+chk(29, "B", min_weighings(12, False)[0], [2, 3, 4, 6])
+chk(30, "C", egg_drop(2, 100), [10, 13, 14, 20])
+
+for n, key, hits, computed in rows:
+    print("M%-2d computed %-18s matches option %-2s key %s  %s" % (n, show(computed), "".join(hits) or "-", key,
+                                                                    "ok" if hits == [key] else "MISMATCH"))
+good = sum(hits == [key] for _, key, hits, _ in rows)
+print("%d of %d answer-key entries confirmed (exactly one option equals the computed value, and it is the keyed one)"
+      % (good, len(rows)))
+\end{lstlisting}
 
 
 \end{document}
