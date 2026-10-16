@@ -1,0 +1,34 @@
+NVIDIA - Software Engineering Intern, Compiler Verification Team
+(source: role description pasted by the candidate; the file role.txt itself was not present in the repository)
+
+Role Description
+
+For two decades, NVIDIA has pioneered visual computing, the art and science of computer graphics. With our invention of the GPU - the engine of modern visual computing - the field has expanded to encompass video games, movie production, product design, medical diagnosis and scientific research.
+We are looking for Software Engineering Intern in compiler verification team.
+
+What you'll be doing:
+- Implement programs or GPU code in PTX, CUDA, C/C++, or a GPU assembly language to verify NVIDIA GPU / embedded compilers.
+- Design and implement tools, libraries, and/or automation to support NVIDIA embedded and GPU compiler development and verification process.
+- Collaborate with compiler and hardware teams to create scalable verification infrastructure for NVIDIA embedded platforms, ensuring robustness and reliability across compiler releases.
+
+What we need to see:
+- Strong academic background
+- Pursuing M. Tech. / B. Tech. in Computer Science or Electrical / Electronics / Information technology Engineering
+- Good understanding of programming languages and their specification
+- Strong C/C++ & Python programming skills
+
+Ways to stand out from the crowd:
+- Prior academic experience or projects in compilers & machine learning
+- Prior academic experience in parallel programming or automation
+
+With competitive salaries and a generous benefits package, NVIDIA is widely considered to be one of the technology world's most desirable employers. Our diverse team of talented, capable, and professional people is our greatest asset! If you're a creative and autonomous engineer with a real passion for technology, we want to hear from you.
+
+----------------------------------------------------------------------
+Additional information (table from the college placement notice, transcribed from the image)
+
+Internship Stipend                       : INR 100,000 per month
+Work Location                            : Pune & Bengaluru
+Assessment Type & Platform               : Mix of Aptitude and Technical (Online) on HackerRank
+Skills to be Assessed                    : C++/C, Python, ML Exposure, Compiler
+
+Offered to final-year students for a winter internship and full-time roles.
